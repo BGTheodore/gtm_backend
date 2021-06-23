@@ -10,5 +10,6 @@ public class FichierDto extends Auditable<String>{
     private String lien;
     private String format;
     private String capacite;
-    private String hash;
+    private String hashPdf;
+    private String hashNomFichier;
 }
