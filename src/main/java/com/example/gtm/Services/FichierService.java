@@ -157,8 +157,8 @@ public class FichierService {
         fichier.setLien(localIp +"/"+nomUniqueDuFichier);
         String setHashNomFichier = hashString(nomUniqueDuFichier);
         fichier.setHashNomFichier(setHashNomFichier);
-        String s = new String(Base64.getDecoder().decode(essaiDto.getPdf()), StandardCharsets.UTF_8);
-        String hashPdf = hashString(s);
+        // String s = new String(Base64.getDecoder().decode(essaiDto.getPdf()), StandardCharsets.UTF_8);
+        String hashPdf = hashString(essaiDto.getPdf());
         fichier.setHashPdf(hashPdf);
         //__send the file to the file server
         // postToFileServer();
