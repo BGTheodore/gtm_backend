@@ -1,6 +1,8 @@
 package com.example.gtm.Controllers;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.List;
@@ -81,7 +83,7 @@ public class EssaiController {
         // ,
         //  @Valid @ModelAttribute Essai essai 
         
-        ) throws ParseException{    
+        ) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException{    
             //__creation du fichier dans la BD apres l'avire enregistré sur le file server
                 Fichier fichier = fichierService.genererStuctureFichier(essaiDto);
                 fichierService.createNewFichier(fichier);

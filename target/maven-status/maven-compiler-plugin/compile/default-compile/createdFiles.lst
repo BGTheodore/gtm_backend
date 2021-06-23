@@ -8,8 +8,6 @@ Dto/Position/PositionDto.class
 com/example/gtm/Services/FichierService.class
 Dto/TypeEssai/TypeEssaiDto.class
 Dto/TypeEssai/TypeEssaiDtoResponse.class
-com/example/gtm/Controllers/testPositiongeographiqueController.class
-com/example/gtm/Repositories/NairobiHealthFacilityRepository.class
 com/example/gtm/Controllers/EssaiController.class
 com/example/gtm/Services/TypeEssaiService.class
 com/example/gtm/Repositories/PositionRepository.class
@@ -17,8 +15,6 @@ com/example/gtm/Controllers/TypeEssaiController.class
 com/example/gtm/Services/InstitutionService.class
 com/example/gtm/KeycloakSecurityConfig.class
 Dto/Essai/EssaiDtoResponse.class
-com/example/gtm/Services/impl/NairobiHealthFacilityServiceImp.class
-com/example/gtm/Services/NairobiHealthFacilityService.class
 Dto/Institution/InstitutionDtoResponse.class
 com/example/gtm/Services/EssaiService$1.class
 com/example/gtm/Repositories/FichierRepository.class
