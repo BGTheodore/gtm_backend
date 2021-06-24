@@ -77,9 +77,9 @@ public class FichierService {
         return convertToDto(fichierCreated);
     }
 
-   public void telechargementFichier(MultipartFile fichier) throws IllegalStateException, IOException{
-       fichier.transferTo(new File("/home/kevin/Documents/kevin/EN3/PROJET_FINAL_URGEO/Spring/gtm/geotechmap/backend/gtm/src/main/java/com/example/gtm/Services"+fichier.getOriginalFilename()));//Path de destination des fichiers telecharges
-   }
+//    public void telechargementFichier(MultipartFile fichier) throws IllegalStateException, IOException{
+//        fichier.transferTo(new File("/home/kevin/Documents/kevin/EN3/PROJET_FINAL_URGEO/Spring/gtm/geotechmap/backend/gtm/src/main/java/com/example/gtm/Services"+fichier.getOriginalFilename()));//Path de destination des fichiers telecharges
+//    }
 
    public String hashString(String stringToHash) throws NoSuchAlgorithmException, InvalidKeySpecException
    {
@@ -104,10 +104,19 @@ public class FichierService {
         }
     }
 
+    public FichierDto getFichier(Long id) {
+        Optional<Fichier> optional = repository.findById(id);
+        if (!optional.isPresent()){
+            throw new ResourceNotFoundException("Fichier not found with id :" + id );
+        } else {
+            return convertToDto(optional.get());
+        }
+    }
+
 
     //============================
 
-    public FichierDto genererStuctureFichier(@Valid EssaiDto essaiDto) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public FichierDto genererStuctureFichier(@Valid EssaiDto essaiDto) throws NoSuchAlgorithmException, InvalidKeySpecException, ParseException {
         Date date = new Date();
         String nomInitial = essaiDto.getFichier().getNom();
         String nomUniqueDuFichier = nomInitial.substring(0, nomInitial.length() - 3)+ new Timestamp(date.getTime()) + ".pdf";

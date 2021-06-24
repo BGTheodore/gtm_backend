@@ -48,11 +48,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.Data;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Base64;
 import java.util.Date;
 
+@Data
+class GetFileRequest {
+    String idFichier;
+}
 
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 @RestController
@@ -88,6 +94,7 @@ public class EssaiController {
                 fichierService.createNewFichier(fichier);
             //__fin creation du fichier dans la BD
 
+           
             //__création de positiion géographique:
                 // Position position = essaiDto.getPosition(); 
                 PositionDto position = service.genererStucturePosition(essaiDto);
@@ -116,10 +123,6 @@ public class EssaiController {
     //     return ResponseEntity.ok().body(service.listAllEssais());
     // }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<EssaiDto> getEssai(@PathVariable Long id){
-        return ResponseEntity.ok().body(service.getEssai(id));
-    }
 
     // @PutMapping("/{id}")
     // @ResponseStatus(HttpStatus.OK)
@@ -149,5 +152,7 @@ public class EssaiController {
         //trim mot_cle
         return ResponseEntity.ok().body(service.rechercheParmotsCles(mot_cle));
     }
+
+
 
 }
