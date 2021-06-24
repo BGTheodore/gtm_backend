@@ -6,13 +6,13 @@ import static org.mockito.Mockito.when;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.example.gtm.Entities.TypeEssai;
-import com.example.gtm.Entities.Position;
-import com.example.gtm.Entities.Fichier;
-import com.example.gtm.Entities.Institution;
-import com.example.gtm.Entities.Essai;
-import com.example.gtm.Repositories.EssaiRepository;
-import com.example.gtm.Services.EssaiService;
+import com.geotechmap.gtm.Entities.Essai;
+import com.geotechmap.gtm.Entities.Fichier;
+import com.geotechmap.gtm.Entities.Institution;
+import com.geotechmap.gtm.Entities.Position;
+import com.geotechmap.gtm.Entities.TypeEssai;
+import com.geotechmap.gtm.Repositories.EssaiRepository;
+import com.geotechmap.gtm.Services.EssaiService;
 
 // import org.junit.Test ;
 import org.junit.runner.RunWith;

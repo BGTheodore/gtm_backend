@@ -6,9 +6,9 @@ import static org.mockito.Mockito.when;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.example.gtm.Entities.Institution;
-import com.example.gtm.Repositories.InstitutionRepository;
-import com.example.gtm.Services.InstitutionService;
+import com.geotechmap.gtm.Entities.Institution;
+import com.geotechmap.gtm.Repositories.InstitutionRepository;
+import com.geotechmap.gtm.Services.InstitutionService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
