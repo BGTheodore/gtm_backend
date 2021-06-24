@@ -56,11 +56,11 @@ public class Essai extends Auditable<String>  {
     @JoinColumn(name = "id_institution")
     private Institution institution; 
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_position")
     private Position position; 
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_fichier")
     private Fichier fichier;
 

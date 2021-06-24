@@ -1,4 +1,5 @@
 package com.geotechmap.gtm.Dto.Position;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.geotechmap.gtm.Entities.Auditable;
 
 import org.locationtech.jts.geom.Point;
@@ -14,5 +15,6 @@ public class PositionDto extends Auditable<String>{
     private String commune;
     private String sectionCommunale;
     private String adresse;
+    @JsonIgnore
     private Point geom; 
 }
