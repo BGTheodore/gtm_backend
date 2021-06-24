@@ -29,7 +29,8 @@ import Dto.TypeEssai.TypeEssaiDto;
 
 @RestController
 @RequestMapping("/api/type_essais")
-@CrossOrigin(origins = "http://localhost:3000")
+
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class TypeEssaiController {
     @Autowired
     TypeEssaiService service;

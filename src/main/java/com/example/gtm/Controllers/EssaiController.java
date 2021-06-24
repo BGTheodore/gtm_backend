@@ -55,7 +55,7 @@ import java.util.Base64;
 import java.util.Date;
 
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 @RestController
 @RequestMapping("/api/essais")
 public class EssaiController {

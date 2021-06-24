@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import Dto.Institution.InstitutionDto;
 
-@CrossOrigin(origins = "http://localhost:3000")
+
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 @RestController
 @RequestMapping("/api/institutions")
 public class InstitutionController {
