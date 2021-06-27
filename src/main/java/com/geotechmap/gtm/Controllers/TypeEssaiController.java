@@ -21,10 +21,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 
 @RestController
 @RequestMapping("/api/type_essais")
@@ -48,6 +54,25 @@ public class TypeEssaiController {
     public  ResponseEntity<List<TypeEssaiDto>>  getAllTypeEssais(){
         return ResponseEntity.ok().body(service.listAllTypeEssais());
     }
+
+    // @GetMapping
+    // @ResponseBody
+    // @ResponseStatus(HttpStatus.OK)
+    // public  ResponseEntity<List<TypeEssaiDto>>  getAllTypeEssais(
+    //   @RequestParam(required = false) String nom,
+    //   @RequestParam(defaultValue = "0") int page,
+    //   @RequestParam(defaultValue = "3") int size
+    // ){
+    //     Page<TypeEssaiDto> pageTuts;
+    //     if (nom == null)
+    //       pageTuts = tutorialRepository.findAll(pagingSort);
+    //     else
+    //       pageTuts = tutorialRepository.findByTitleContaining(title, pagingSort);
+  
+    //     tutorials = pageTuts.getContent();
+
+    //     return ResponseEntity.ok().body(service.listAllTypeEssais());
+    // }
 
     @GetMapping("/{id}")
     @ResponseBody

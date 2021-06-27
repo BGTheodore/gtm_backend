@@ -1,4 +1,4 @@
-package com.example.gtm;
+package com.geotechmap.gtm;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -14,7 +14,7 @@ import com.geotechmap.gtm.Entities.TypeEssai;
 import com.geotechmap.gtm.Repositories.EssaiRepository;
 import com.geotechmap.gtm.Services.EssaiService;
 
-// import org.junit.Test ;
+import org.junit.Test ;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +33,7 @@ public class EssaiRepositoryTests {
 	@MockBean
     private EssaiRepository essaiRepository;
 
-    @org.junit.Test
+    @Test
     public void whenSaveOneToManyRelationship_thenCorrect() {
         TypeEssai typeEssai = new TypeEssai();
         typeEssai.setNom("Teneur en eau");
@@ -63,6 +63,8 @@ public class EssaiRepositoryTests {
         fichier.setLien("www.gtm.fichiers/245456545.pdf");
         fichier.setFormat("PDF");
         fichier.setCapacite("1024 MB");
+        fichier.setHashNomFichier("uigeflgb");
+        fichier.setHashPdf("jbfdglluduil");
 
         Essai essai1 = new Essai();
         // Test test2 = new Test();

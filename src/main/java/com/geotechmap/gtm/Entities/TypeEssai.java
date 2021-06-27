@@ -1,9 +1,13 @@
 package com.geotechmap.gtm.Entities;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,9 +38,9 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE type_essais SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted is false")
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class, 
-  property = "id") 
+// @JsonIdentityInfo(
+//   generator = ObjectIdGenerators.PropertyGenerator.class, 
+//   property = "id") 
 @EqualsAndHashCode(callSuper=false)//to check
 public class TypeEssai extends Auditable<String>{
 
@@ -60,8 +64,8 @@ public class TypeEssai extends Auditable<String>{
 
    
     @OneToMany(mappedBy = "typeEssai")
-    // @JsonManagedReference
-          // @JsonBackReference
-    private List<Essai> essais;
+     @JsonManagedReference
+    // @JsonBackReference
+     private List<Essai> essais;
 
 }

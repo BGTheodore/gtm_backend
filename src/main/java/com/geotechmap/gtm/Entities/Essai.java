@@ -37,19 +37,19 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class, 
-  property = "id") // to have reference of the type_essai
+// @JsonIdentityInfo(
+//   generator = ObjectIdGenerators.PropertyGenerator.class, 
+//   property = "id") // to have reference of the type_essai
 public class Essai extends Auditable<String>  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @JsonBackReference
-           // @JsonManagedReference
-    @ManyToOne()
-    @JoinColumn(name = "id_type_essai")
-    private TypeEssai typeEssai; 
+    // @JsonManagedReference
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name="id_type_essai")
+    private TypeEssai typeEssai;
 
 
     @ManyToOne()
