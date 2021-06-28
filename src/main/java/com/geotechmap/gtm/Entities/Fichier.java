@@ -37,11 +37,11 @@ public class Fichier extends Auditable<String>{
     @Column(length = 255)
     private String nom;
 
-    @NotNull(message = "Champs obligatoire")
-    @NotEmpty(message = "Champs obligatoire")
-    @Size(max = 255, message = "255 caractères au maximum")
-    @Column(length = 255)
-    private String lien;
+    // @NotNull(message = "Champs obligatoire")
+    // @NotEmpty(message = "Champs obligatoire")
+    // @Size(max = 255, message = "255 caractères au maximum")
+    // @Column(length = 255)
+    // private String lien;//delte this field
 
     @Size(max = 255, message = "255 caractères au maximum")
     @Column(length = 255)

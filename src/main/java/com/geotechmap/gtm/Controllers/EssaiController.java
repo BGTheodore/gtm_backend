@@ -78,34 +78,32 @@ public class EssaiController {
     PositionService positionService;
 
     //Create a test
+    // @PostMapping
+    // @ResponseStatus(HttpStatus.CREATED)
+    // @ResponseBody
+    // public EssaiDto createNewEssai(@RequestBody @Valid EssaiDto essaiDto
+    //     ) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException{    
+    //         //__creation du fichier dans la BD apres l'avire enregistré sur le file server
+    //             FichierDto fichier = fichierService.genererStuctureFichier(essaiDto);
+    //             fichierService.createNewFichier(fichier);
+    //         //__fin creation du fichier dans la BD
+    //         //__création de positiion géographique:
+    //             // Position position = essaiDto.getPosition(); 
+    //             PositionDto position = service.genererStucturePosition(essaiDto);
+    //             positionService.createNewPosition(position);
+    //         //__fin création de positiion géographique:
+
+    //         essaiDto.setPosition(position);
+    //         essaiDto.setFichier(fichier);
+    //         EssaiDto createdEssai = service.createNewEssai(essaiDto);
+    //         return createdEssai;
+    // }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public EssaiDto createNewEssai(
-        @RequestBody @Valid EssaiDto essaiDto
-        // @RequestPart("file") MultipartFile fichier
-        // @RequestParam("file") MultipartFile fichier
-        // ,
-        //  @Valid @ModelAttribute Essai essai 
-        
-        ) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException{    
-            //__creation du fichier dans la BD apres l'avire enregistré sur le file server
-                FichierDto fichier = fichierService.genererStuctureFichier(essaiDto);
-                fichierService.createNewFichier(fichier);
-            //__fin creation du fichier dans la BD
-
-           
-            //__création de positiion géographique:
-                // Position position = essaiDto.getPosition(); 
-                PositionDto position = service.genererStucturePosition(essaiDto);
-                positionService.createNewPosition(position);
-            //__fin création de positiion géographique:
-
-            // fichierService.telechargementFichier(fichier);
-          
-
-            essaiDto.setPosition(position);
-            essaiDto.setFichier(fichier);
+    public EssaiDto createNewEssai(@RequestBody @Valid EssaiDto essaiDto
+        ) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException{
             EssaiDto createdEssai = service.createNewEssai(essaiDto);
             return createdEssai;
     }
@@ -114,6 +112,13 @@ public class EssaiController {
     @ResponseStatus(HttpStatus.OK)
     public  ResponseEntity<List<EssaiDto>>  getAllEssais(){
         return ResponseEntity.ok().body(service.listAllEssais());
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<EssaiDto> updateEssai(@RequestBody EssaiDto essaiDto, @PathVariable Long id) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
+        System.out.println(essaiDto);    
+        return ResponseEntity.ok().body(service.updateEssai(id, essaiDto));
     }
 
     //cette route est pour retourner les essai dans le webmap tout en les regroupant par categorie pour générer les ovelay dynamiquent
@@ -140,6 +145,12 @@ public class EssaiController {
     //     essai.setFichier(fichier);
     //     return ResponseEntity.ok().body(service.updateEssai(id, essai));
     // }
+
+    @GetMapping("/{id}")
+    @ResponseBody
+    public EssaiDto getEssai(@PathVariable Long id){
+        return service.getEssai(id);
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
