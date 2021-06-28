@@ -1,10 +1,12 @@
 package com.geotechmap.gtm.Entities;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,12 +25,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "essais", indexes = @Index(name = "essais_mots_cles_index", columnList = "mots_cles"))
@@ -37,18 +42,19 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-// @JsonIdentityInfo(
-//   generator = ObjectIdGenerators.PropertyGenerator.class, 
-//   property = "id") // to have reference of the type_essai
+
 public class Essai extends Auditable<String>  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @JsonManagedReference
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name="id_type_essai")
+    // @NaturalId(mutable = false)
+    // @Column(name="natural_id", length = 255, unique = true)
+    // private String naturalId;
+
+    //@JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_type_essai", nullable = false)
     private TypeEssai typeEssai;
 
 
@@ -76,4 +82,33 @@ public class Essai extends Auditable<String>  {
     @Lob // large object
     private String pdf;
 
+    // @Override
+    // public boolean equals(Object obj) {
+    //     if (this == obj) {
+    //         return true;
+    //     }
+
+    //     if (obj == null) {
+    //         return false;
+    //     }
+
+    //     if (obj.getClass() != getClass()) {
+    //         return false;
+    //     }
+
+    //     Essai essai = (Essai) obj;
+
+    //     return java.util.Objects.equals(this.naturalId, essai.getNaturalId());
+    // }
+
+    // @Override
+    // public int hashCode() {
+    //     return java.util.Objects.hashCode(naturalId);
+    // }
+
+
+    // public void setNaturalId(String naturalId){
+    //     java.util.Date date = new java.util.Date();
+    //     this.naturalId = new Timestamp(date.getTime()).toString();
+    // }
 }

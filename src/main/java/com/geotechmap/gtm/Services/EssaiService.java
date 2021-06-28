@@ -2,6 +2,8 @@ package com.geotechmap.gtm.Services;
 
 
 import java.lang.reflect.Type;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -10,6 +12,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.validation.Valid;
 
 import com.geotechmap.gtm.Dto.Essai.EssaiDto;
@@ -29,8 +33,12 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-
-
+import java.util.Date;
+import java.sql.Timestamp;
+import org.springframework.core.env.Environment;
+import java.nio.charset.Charset;
+import java.security.spec.KeySpec;
+import java.util.Base64;
 
 @Service
 public class EssaiService {
@@ -40,6 +48,8 @@ public class EssaiService {
     TypeEssaiService typeEssaiService;
     @Autowired
     TypeEssaiRepository typeEssaiRepository;
+    @Autowired
+    private Environment env;
 
 
     final ModelMapper modelMapper = new ModelMapper();
@@ -52,10 +62,39 @@ public class EssaiService {
         Essai essai = modelMapper.map(essaiDto, Essai.class);
         return essai;
     }
+    public String hashString(String stringToHash) throws NoSuchAlgorithmException, InvalidKeySpecException
+    {
+        //__generer hash du nom du fichier
+        String secretSalt = env.getProperty("secret_salt");
+        byte[] secretSaltInBytes = secretSalt.getBytes(Charset.forName("UTF-8"));
+        KeySpec spec = new PBEKeySpec(stringToHash.toCharArray(), secretSaltInBytes, 65536, 128);
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        byte[] hash = factory.generateSecret(spec).getEncoded();
+        Base64.Encoder enc = Base64.getEncoder();
+        String hashToString = enc.encodeToString(hash);
+        //__fin generer hash du nom du fichier
+        return hashToString;
+    }
     
     //_______________________
     
-    public EssaiDto createNewEssai(EssaiDto essaiDto) throws ParseException {
+    public EssaiDto createNewEssai(EssaiDto essaiDto) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
+        //___AJOUTER POINT GEOGRAPHIQUE DANS PODITION 
+            GeometryFactory geometryFactory = new GeometryFactory();
+            Coordinate coordinate = new Coordinate(essaiDto.getPosition().getLatitude(), essaiDto.getPosition().getLongitude());
+            Point point = geometryFactory.createPoint(coordinate);
+            point.setSRID(3857);//Nous devons choisir un SRID (old 4326) WGS84
+            essaiDto.getPosition().setGeom(point);
+        //___COMPLETER INFORMATIONS DU FICHIER 
+            Date date = new Date();
+            String nomInitial = essaiDto.getFichier().getNom();
+            String nomUniqueDuFichier = nomInitial.substring(0, nomInitial.length() - 3)+ new Timestamp(date.getTime()) + ".pdf";
+            nomUniqueDuFichier = nomUniqueDuFichier.replace(' ','-');
+            String hashDuNomDeFichier = hashString(nomUniqueDuFichier);
+            String hashDuNomDeFichierSansCaractereCompromettant =  hashDuNomDeFichier.replace('/','-');
+            essaiDto.getFichier().setHashNomFichier(hashDuNomDeFichierSansCaractereCompromettant);
+            essaiDto.getFichier().setHashPdf(hashString(essaiDto.getPdf()));
+
         Essai essai = convertToEntity(essaiDto);
         Essai essaiCreated =  repository.save(essai);
         return convertToDto(essaiCreated);

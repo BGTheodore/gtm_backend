@@ -28,6 +28,8 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.bouncycastle.util.Objects;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -38,20 +40,19 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE type_essais SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted is false")
-// @JsonIdentityInfo(
-//   generator = ObjectIdGenerators.PropertyGenerator.class, 
-//   property = "id") 
-@EqualsAndHashCode(callSuper=false)//to check
-public class TypeEssai extends Auditable<String>{
+
+@EqualsAndHashCode(callSuper = false) // to check
+public class TypeEssai extends Auditable<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // @NaturalId
     @NotNull(message = "Nom obligatoire")
     @NotEmpty(message = "Champs obligatoire")
     @Size(min = 2, max = 45, message = "2 caractères au minimum; 45 maximum")
-    @Column(nullable = false, length = 45)
+    @Column(nullable = false, unique = true, length = 45)
     private String nom;
 
     @Size(max = 15, message = "15 caractères au maximum")
@@ -62,10 +63,36 @@ public class TypeEssai extends Auditable<String>{
     @Column(length = 255)
     private String description;
 
-   
+
+    // implement hashCode() and equals()
+    //@JsonManagedReference
     @OneToMany(mappedBy = "typeEssai")
-     @JsonManagedReference
-    // @JsonBackReference
-     private List<Essai> essais;
+    private List<Essai> essais;
+
+    // @Override
+    // public boolean equals(Object obj) {
+    //     if (this == obj) {
+    //         return true;
+    //     }
+
+    //     if (obj == null) {
+    //         return false;
+    //     }
+
+    //     if (obj.getClass() != getClass()) {
+    //         return false;
+    //     }
+
+    //     TypeEssai typeEssai = (TypeEssai) obj;
+
+    //     return java.util.Objects.equals(this.nom, typeEssai.getNom());
+    // }
+
+    // @Override
+    // public int hashCode() {
+    //     return java.util.Objects.hashCode(nom);
+    // }
+
+
 
 }

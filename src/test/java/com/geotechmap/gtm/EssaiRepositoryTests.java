@@ -60,7 +60,7 @@ public class EssaiRepositoryTests {
         position.setAdresse("#41, Rue Chanvannes prolongée");
 
         Fichier fichier = new Fichier();
-        fichier.setLien("www.gtm.fichiers/245456545.pdf");
+        // fichier.setLien("www.gtm.fichiers/245456545.pdf");
         fichier.setFormat("PDF");
         fichier.setCapacite("1024 MB");
         fichier.setHashNomFichier("uigeflgb");

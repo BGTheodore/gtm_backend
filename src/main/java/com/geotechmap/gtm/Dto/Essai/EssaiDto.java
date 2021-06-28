@@ -1,4 +1,6 @@
 package com.geotechmap.gtm.Dto.Essai;
+import java.io.Serializable;
+
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -12,15 +14,13 @@ import com.geotechmap.gtm.Dto.TypeEssai.TypeEssaiDto;
 import com.geotechmap.gtm.Entities.Auditable;
 
 import lombok.Data;
-// @JsonIdentityInfo(
-//   generator = ObjectIdGenerators.PropertyGenerator.class, 
-//   property = "id") // to have reference of the type_essai
+
 
 @Data
-public class EssaiDto extends Auditable<String>{
+public class EssaiDto extends Auditable<String>  implements Serializable{
     private Long id;
-    @JsonBackReference
-    // @JsonManagedReference
+    private static final long serialVersionUID = 1L;
+    //@JsonBackReference
     private TypeEssaiDto typeEssai; 
     private InstitutionDto institution; 
     private PositionDto position; 
@@ -29,4 +29,9 @@ public class EssaiDto extends Auditable<String>{
     private String commentaire;
     private String pdf;
 
+
+    public TypeEssaiDto getTypeEssai(){
+        typeEssai.setEssais(null);
+        return typeEssai;
+    }
 }
