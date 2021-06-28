@@ -28,6 +28,7 @@ public class EssaiDto extends Auditable<String>  implements Serializable{
     private String motsCles;
     private String commentaire;
     private String pdf;
+    private String nomFichierASuprimmer;
 
 
     public TypeEssaiDto getTypeEssai(){

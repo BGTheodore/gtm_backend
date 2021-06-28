@@ -114,11 +114,28 @@ public class EssaiService {
     
 
 
-    public EssaiDto updateEssai(Long id, EssaiDto essaiDto) throws ParseException {
+    public EssaiDto updateEssai(Long id, EssaiDto essaiDto) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
         Optional<Essai> optional = repository.findById(id);
         if (!optional.isPresent()) {
         throw new ResourceNotFoundException("Essai not found with id :" + id);
         } else {
+           
+             //___AJOUTER POINT GEOGRAPHIQUE DANS PODITION 
+                GeometryFactory geometryFactory = new GeometryFactory();
+                Coordinate coordinate = new Coordinate(essaiDto.getPosition().getLatitude(), essaiDto.getPosition().getLongitude());
+                Point point = geometryFactory.createPoint(coordinate);
+                point.setSRID(3857);//Nous devons choisir un SRID (old 4326) WGS84
+                essaiDto.getPosition().setGeom(point);
+            //___COMPLETER INFORMATIONS DU FICHIER 
+                Date date = new Date();
+                String nomInitial = essaiDto.getFichier().getNom();
+                String nomUniqueDuFichier = nomInitial.substring(0, nomInitial.length() - 3)+ new Timestamp(date.getTime()) + ".pdf";
+                nomUniqueDuFichier = nomUniqueDuFichier.replace(' ','-');
+                String hashDuNomDeFichier = hashString(nomUniqueDuFichier);
+                String hashDuNomDeFichierSansCaractereCompromettant =  hashDuNomDeFichier.replace('/','-');
+                essaiDto.getFichier().setHashNomFichier(hashDuNomDeFichierSansCaractereCompromettant);
+                essaiDto.getFichier().setHashPdf(hashString(essaiDto.getPdf()));
+                System.out.println("Nou pral edit+++++++++++++++++++++++++++++++++++++++++++++:"+essaiDto);
             Essai essai = convertToEntity(essaiDto);
             essai.setId(id);
             return convertToDto(repository.save(essai));
