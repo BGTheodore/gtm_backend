@@ -1,5 +1,6 @@
 package com.geotechmap.gtm.Services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,13 +8,15 @@ import com.geotechmap.gtm.Dto.Institution.InstitutionDto;
 import com.geotechmap.gtm.Entities.Institution;
 import com.geotechmap.gtm.Exception.ResourceNotFoundException;
 import com.geotechmap.gtm.Repositories.InstitutionRepository;
-
+import com.geotechmap.gtm.Util.CurrentUserUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.modelmapper.TypeToken;
 import java.lang.reflect.Type;
+
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 @Service
 public class InstitutionService {
@@ -34,12 +37,20 @@ public class InstitutionService {
     //_________________________
     
     public InstitutionDto createNewInstitution(InstitutionDto institutionDto) throws ParseException{
+        institutionDto.setCreatedBy(CurrentUserUtil.getUsername());
+        institutionDto.setLastModifiedBy(CurrentUserUtil.getUsername());
+        institutionDto.setCreatedDate(new Date());
+        institutionDto.setLastModifiedDate(new Date());
         Institution institution = convertToEntity(institutionDto);
+        institution.setCreatedBy(CurrentUserUtil.getUsername());
+        institution.setLastModifiedBy(CurrentUserUtil.getUsername());
+       
         Institution institutionCreated = repository.save(institution);
         return convertToDto(institutionCreated);
     }
 
     public List<InstitutionDto> listAllInstitutions(){
+    //   System.out.println("*******************************"+ CurrentUserUtil.getUsername()); 
         List<InstitutionDto> institutionDto;
         List<Institution> institutions = repository.findAll();
         Type listType = new TypeToken<List<InstitutionDto>>() {}.getType();

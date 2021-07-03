@@ -1,6 +1,8 @@
 package com.geotechmap.gtm.Controllers;
 import java.text.ParseException;
 import java.util.List;
+
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import com.geotechmap.gtm.Dto.Institution.InstitutionDto;
@@ -39,7 +41,9 @@ public class InstitutionController {
         return service.createNewInstitution(institutionDto);
     }
 
+
     @GetMapping
+    // @RolesAllowed({"SUPER_ADMIN"})
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<InstitutionDto>> getAllInstitutions(){
@@ -64,3 +68,4 @@ public class InstitutionController {
         service.deleteInstitution(id);
     }
 }
+
