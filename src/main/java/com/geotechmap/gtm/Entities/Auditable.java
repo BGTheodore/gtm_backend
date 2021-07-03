@@ -21,7 +21,7 @@ import java.util.Date;
 
 @MappedSuperclass
 @Data
-@EntityListeners(AuditingEntityListener.class)
+// @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable<U> {
 
     @CreatedBy

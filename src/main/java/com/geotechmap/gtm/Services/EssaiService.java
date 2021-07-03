@@ -17,6 +17,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.validation.Valid;
 
 import com.geotechmap.gtm.Dto.Essai.EssaiDto;
+import com.geotechmap.gtm.Dto.Essai.EssaiDtoResponse;
 import com.geotechmap.gtm.Dto.Position.PositionDto;
 import com.geotechmap.gtm.Dto.TypeEssai.TypeEssaiDto;
 import com.geotechmap.gtm.Entities.Essai;
@@ -34,6 +35,7 @@ import org.locationtech.jts.geom.Point;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import java.util.Date;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import org.springframework.core.env.Environment;
 import java.nio.charset.Charset;
@@ -78,7 +80,10 @@ public class EssaiService {
     
     //_______________________
     
-    public EssaiDto createNewEssai(EssaiDto essaiDto) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public EssaiDtoResponse createNewEssai(@Valid EssaiDto essaiDto) {
+        EssaiDtoResponse essaiDtoResponse = new EssaiDtoResponse();
+        essaiDtoResponse.setEssaiDto(null);
+       try{
         //___AJOUTER POINT GEOGRAPHIQUE DANS PODITION 
             GeometryFactory geometryFactory = new GeometryFactory();
             Coordinate coordinate = new Coordinate(essaiDto.getPosition().getLatitude(), essaiDto.getPosition().getLongitude());
@@ -96,8 +101,26 @@ public class EssaiService {
             essaiDto.getFichier().setHashPdf(hashString(essaiDto.getPdf()));
 
         Essai essai = convertToEntity(essaiDto);
-        Essai essaiCreated =  repository.save(essai);
-        return convertToDto(essaiCreated);
+      
+   
+            Essai essaiCreated =  repository.save(essai);
+
+            essaiDtoResponse.setEssaiDto(convertToDto(essaiCreated));
+            essaiDtoResponse.setMessage("Succès !");
+        } catch (IllegalArgumentException e) {
+            essaiDtoResponse.setMessage(e.getMessage());
+        }catch(ParseException e ){
+
+        }catch(NoSuchAlgorithmException e){
+            //impossible de calculer le hash
+
+        }catch(InvalidKeySpecException e){
+            //
+        }
+        
+
+
+        return essaiDtoResponse;
         }
 
     public List<EssaiDto> listAllEssais() {

@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import com.geotechmap.gtm.Dto.Essai.EssaiDto;
+import com.geotechmap.gtm.Dto.Essai.EssaiDtoResponse;
 import com.geotechmap.gtm.Dto.Fichier.FichierDto;
 import com.geotechmap.gtm.Dto.Position.PositionDto;
 import com.geotechmap.gtm.Dto.TypeEssai.TypeEssaiDto;
@@ -102,12 +104,13 @@ public class EssaiController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public EssaiDto createNewEssai(@RequestBody @Valid EssaiDto essaiDto
+    public EssaiDtoResponse createNewEssai(@RequestBody @Valid EssaiDto essaiDto
         ) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException{
-            EssaiDto createdEssai = service.createNewEssai(essaiDto);
+            EssaiDtoResponse createdEssai = service.createNewEssai(essaiDto);
             return createdEssai;
     }
 
+    
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public  ResponseEntity<List<EssaiDto>>  getAllEssais(){

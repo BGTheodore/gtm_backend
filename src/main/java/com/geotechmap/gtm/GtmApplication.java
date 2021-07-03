@@ -17,7 +17,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 //@RestController
-
+@Configuration
 @EnableJpaAuditing(auditorAwareRef="auditorAware")
 public class GtmApplication {
 
