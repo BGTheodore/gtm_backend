@@ -10,9 +10,6 @@ import com.geotechmap.gtm.Dto.Essai.EssaiDto;
 import com.geotechmap.gtm.Entities.Auditable;
 
 import lombok.Data;
-
-
-  
 @Data
 public class TypeEssaiDto extends Auditable<String> implements Serializable {
     private Long id;

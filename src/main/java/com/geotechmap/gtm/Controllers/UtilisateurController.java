@@ -5,10 +5,10 @@ import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
-import com.geotechmap.gtm.Dto.Institution.InstitutionDto;
-import com.geotechmap.gtm.Dto.Institution.InstitutionDtoResponse;
-import com.geotechmap.gtm.Repositories.InstitutionRepository;
-import com.geotechmap.gtm.Services.InstitutionService;
+import com.geotechmap.gtm.Dto.Utilisateur.UtilisateurDto;
+import com.geotechmap.gtm.Dto.Utilisateur.UtilisateurDtoResponse;
+import com.geotechmap.gtm.Repositories.UtilisateurRepository;
+import com.geotechmap.gtm.Services.UtilisateurService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,46 +28,45 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/api/institutions")
+@RequestMapping("/api/utilisateurs")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
-public class InstitutionController {
+public class UtilisateurController {
     @Autowired
-    InstitutionService service;
-    InstitutionRepository repository;
+    UtilisateurService service;
+    UtilisateurRepository repository;
 
-    
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public InstitutionDtoResponse createNewInstitution(@Valid @RequestBody InstitutionDto institutionDto) throws ParseException {
-        return service.createNewInstitution(institutionDto);
+    public UtilisateurDtoResponse createNewUtilisateur( @RequestBody UtilisateurDto utilisateurDto) throws ParseException {
+        System.out.println("==================="+utilisateurDto);
+        return service.createNewUtilisateur(utilisateurDto);
     }
-
 
     @GetMapping
     // @RolesAllowed({"SUPER_ADMIN"})
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<InstitutionDto>> getAllInstitutions(){
-        return ResponseEntity.ok().body(service.listAllInstitutions());
+    public ResponseEntity<List<UtilisateurDto>> getAllUtilisateurs(){
+        return ResponseEntity.ok().body(service.listAllUtilisateurs());
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public InstitutionDtoResponse getInstitution(@PathVariable Long id){
-        return service.getInstitution(id);
+    public UtilisateurDtoResponse getUtilisateur(@PathVariable Long id){
+        return service.getUtilisateur(id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<InstitutionDtoResponse> updateInstitution(@RequestBody InstitutionDto institutionDto, @PathVariable Long id) throws ParseException {
-        return ResponseEntity.ok().body(service.updateInstitution(id, institutionDto));
+    public ResponseEntity<UtilisateurDtoResponse> updateUtilisateur(@RequestBody UtilisateurDto utilisateurDto, @PathVariable Long id) throws ParseException {
+        return ResponseEntity.ok().body(service.updateUtilisateur(id, utilisateurDto));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteInstitution(@PathVariable Long id){
-        service.deleteInstitution(id);
+    public void deleteUtilisateur(@PathVariable Long id){
+        service.deleteUtilisateur(id);
     }
-}
 
+}

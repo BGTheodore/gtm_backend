@@ -40,7 +40,7 @@ import org.locationtech.jts.geom.Point;
 @SQLDelete(sql = "UPDATE positions SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted is false")
 @EqualsAndHashCode(callSuper=false)//to check
-public class Position extends Auditable<String> implements Serializable {
+public class Position implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

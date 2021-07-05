@@ -21,6 +21,7 @@ import com.geotechmap.gtm.Entities.Essai;
 import com.geotechmap.gtm.Entities.Fichier;
 import com.geotechmap.gtm.Exception.ResourceNotFoundException;
 import com.geotechmap.gtm.Repositories.FichierRepository;
+import com.geotechmap.gtm.Util.CurrentUserUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,9 +72,8 @@ public class FichierService {
 
     //____________________
 
-    public FichierDto createNewFichier(FichierDto fichier) throws ParseException{
-
-        Fichier fichierCreated = repository.save(convertToEntity(fichier));
+    public FichierDto createNewFichier(FichierDto fichierDto) throws ParseException{
+        Fichier fichierCreated = repository.save(convertToEntity(fichierDto));
         return convertToDto(fichierCreated);
     }
 
@@ -94,13 +94,14 @@ public class FichierService {
        //__fin generer hash du nom du fichier
        return hashToString;
    }
-   public Fichier updateFichier(Long id, Fichier fichier){
+   public FichierDto updateFichier(Long id, FichierDto fichierDto) throws ParseException{
         Optional<Fichier> optional = repository.findById(id);
         if (!optional.isPresent()){
             throw new ResourceNotFoundException("Fichier not found with id :" + id );
         } else {
+            Fichier fichier = convertToEntity(fichierDto);
             fichier.setId(id);
-            return repository.save(fichier);
+            return convertToDto(repository.save(fichier));
         }
     }
 

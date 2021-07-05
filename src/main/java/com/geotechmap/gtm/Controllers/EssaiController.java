@@ -119,8 +119,7 @@ public class EssaiController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<EssaiDto> updateEssai(@RequestBody EssaiDto essaiDto, @PathVariable Long id) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
-        System.out.println(essaiDto);    
+    public ResponseEntity<EssaiDtoResponse> updateEssai(@RequestBody EssaiDto essaiDto, @PathVariable Long id) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException {  
         return ResponseEntity.ok().body(service.updateEssai(id, essaiDto));
     }
 

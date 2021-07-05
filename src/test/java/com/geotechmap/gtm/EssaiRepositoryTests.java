@@ -11,6 +11,7 @@ import com.geotechmap.gtm.Entities.Fichier;
 import com.geotechmap.gtm.Entities.Institution;
 import com.geotechmap.gtm.Entities.Position;
 import com.geotechmap.gtm.Entities.TypeEssai;
+import com.geotechmap.gtm.Entities.Utilisateur;
 import com.geotechmap.gtm.Repositories.EssaiRepository;
 import com.geotechmap.gtm.Services.EssaiService;
 
@@ -49,6 +50,9 @@ public class EssaiRepositoryTests {
         institution.setEmail("www.lnbtp.com");
         institution.setNumeroFiscal("RR-32323");
         institution.setDescription("Lorem ipsum dolor.");
+
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setIdKeycloak("nweibi");
 
         Position position = new Position();
         position.setAltitude(1.2);;

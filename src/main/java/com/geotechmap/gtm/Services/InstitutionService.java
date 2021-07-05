@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.geotechmap.gtm.Dto.Institution.InstitutionDto;
+import com.geotechmap.gtm.Dto.Institution.InstitutionDtoResponse;
 import com.geotechmap.gtm.Entities.Institution;
 import com.geotechmap.gtm.Exception.ResourceNotFoundException;
 import com.geotechmap.gtm.Repositories.InstitutionRepository;
@@ -36,17 +37,24 @@ public class InstitutionService {
     }
     //_________________________
     
-    public InstitutionDto createNewInstitution(InstitutionDto institutionDto) throws ParseException{
-        institutionDto.setCreatedBy(CurrentUserUtil.getUsername());
-        institutionDto.setLastModifiedBy(CurrentUserUtil.getUsername());
-        institutionDto.setCreatedDate(new Date());
-        institutionDto.setLastModifiedDate(new Date());
+    public InstitutionDtoResponse createNewInstitution(InstitutionDto institutionDto) throws ParseException{
+        InstitutionDtoResponse institutionDtoResponse = new InstitutionDtoResponse();
+        institutionDtoResponse.setInstitutionDto(null);
+        try{
+             //___ Audit
+            institutionDto.setCreatedBy(CurrentUserUtil.getUsername());
+            institutionDto.setLastModifiedBy(CurrentUserUtil.getUsername());
+            institutionDto.setCreatedDate(new Date());
+            institutionDto.setLastModifiedDate(new Date());
+        //___ Fin Audit
         Institution institution = convertToEntity(institutionDto);
-        institution.setCreatedBy(CurrentUserUtil.getUsername());
-        institution.setLastModifiedBy(CurrentUserUtil.getUsername());
-       
         Institution institutionCreated = repository.save(institution);
-        return convertToDto(institutionCreated);
+        institutionDtoResponse.setInstitutionDto(convertToDto(institutionCreated));
+        institutionDtoResponse.setMessage("Succès !");
+    }catch(IllegalArgumentException e){
+        //
+    }
+    return institutionDtoResponse;
     }
 
     public List<InstitutionDto> listAllInstitutions(){
@@ -58,14 +66,28 @@ public class InstitutionService {
         return institutionDto;
     }
 
-    public InstitutionDto updateInstitution(Long id, InstitutionDto institutionDto) throws ParseException{
+    public InstitutionDtoResponse updateInstitution(Long id, InstitutionDto institutionDto) throws ParseException{
         Optional<Institution> optional = repository.findById(id);
         if (!optional.isPresent()){
             throw new ResourceNotFoundException("Institution not found with id :" + id );
         } else {
+            InstitutionDtoResponse institutionDtoResponse = new InstitutionDtoResponse();
+            institutionDtoResponse.setInstitutionDto(null);
+           try {
+               //___ Audit
+               institutionDto.setLastModifiedBy(CurrentUserUtil.getUsername());
+               institutionDto.setLastModifiedDate(new Date());
+           //___ Fin Audit
             Institution institution = convertToEntity(institutionDto);
             institution.setId(id);// je dois mettre l'id dans le body et enlever ca en parametre
-            return convertToDto(repository.save(institution));
+            
+            Institution institutionCreated =  repository.save(institution);
+            institutionDtoResponse.setInstitutionDto(convertToDto(institutionCreated));
+            institutionDtoResponse.setMessage("Succès !");
+        } catch (Exception e) {
+            //TODO: handle exceptionessaiDtoResponse
+        }
+            return institutionDtoResponse;
         }
     }
 
@@ -78,12 +100,18 @@ public class InstitutionService {
         }
     }
 
-    public InstitutionDto getInstitution(Long id) {
+    public InstitutionDtoResponse getInstitution(Long id) {
         Optional<Institution> optional = repository.findById(id);
+        InstitutionDtoResponse institutionDtoResponse = new InstitutionDtoResponse();
+        institutionDtoResponse.setInstitutionDto(null);
+       
         if (!optional.isPresent()){
             throw new ResourceNotFoundException("Institution not found with id :" + id );
         } else {
-            return convertToDto(optional.get());
+            institutionDtoResponse.setInstitutionDto(convertToDto(optional.get()));
+            institutionDtoResponse.setMessage("Succès !");
+       
+            return institutionDtoResponse;
         }
     }
 }
