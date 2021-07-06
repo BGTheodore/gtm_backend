@@ -1,13 +1,21 @@
 package com.geotechmap.gtm.Services;
 
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,10 +44,16 @@ import org.locationtech.jts.geom.Point;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import java.util.Date;
+import java.util.HashMap;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import org.springframework.core.env.Environment;
+
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
+
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 
@@ -81,7 +95,7 @@ public class EssaiService {
     
     //_______________________
     
-    public EssaiDtoResponse createNewEssai(@Valid EssaiDto essaiDto) {
+    public EssaiDtoResponse createNewEssai(@Valid EssaiDto essaiDto)  {
         EssaiDtoResponse essaiDtoResponse = new EssaiDtoResponse();
         essaiDtoResponse.setEssaiDto(null);
        try{
@@ -110,6 +124,10 @@ public class EssaiService {
         Essai essai = convertToEntity(essaiDto);
       
             Essai essaiCreated =  repository.save(essai);
+
+            //__save image to file server
+            
+            //__ fin save image to file server
 
             essaiDtoResponse.setEssaiDto(convertToDto(essaiCreated));
             essaiDtoResponse.setMessage("Succès !");
@@ -247,7 +265,27 @@ public class EssaiService {
     }
 
     //============================
+public Object postFile() throws IOException{
+    System.out.print("000000000000000000000000000000000000000000000000");
+    URL url = new URL("http://localhost:8081/api/file");
+    URLConnection con = url.openConnection();
+    HttpURLConnection http = (HttpURLConnection)con;
+    http.setRequestMethod("POST"); 
+    http.setDoOutput(true);
 
+    byte[] out = "{\"username\":\"root\",\"password\":\"password\"}" .getBytes(StandardCharsets.UTF_8);
+    int length = out.length;
+
+    http.setFixedLengthStreamingMode(length);
+    http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+    http.connect();
+    try(OutputStream os = http.getOutputStream()) {
+        os.write(out);
+}
+
+
+	return http;
+}
     // public PositionDto genererStucturePosition(@Valid EssaiDto essaiDto) {
         
     //     GeometryFactory geometryFactory = new GeometryFactory();
@@ -265,5 +303,7 @@ public class EssaiService {
     //     return position;
         
     // }
+
+   
 
 }

@@ -115,8 +115,17 @@ public class UtilisateurService {
                 return utilisateurDtoResponse;
             }
         }
-        
 
+        public List<Object> listAllUtilisateursKeycloak() {
+            return repository.listAllUtilisateursKeycloak();
+       
+        }
+
+        public Utilisateur rechercheParUsername(String username) {
+           Utilisateur utilisateur = repository.rechercheParUsername(username);
+           return utilisateur;
+        }
+        
 }
 
 

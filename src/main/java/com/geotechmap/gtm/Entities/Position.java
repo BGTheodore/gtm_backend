@@ -40,7 +40,7 @@ import org.locationtech.jts.geom.Point;
 @SQLDelete(sql = "UPDATE positions SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted is false")
 @EqualsAndHashCode(callSuper=false)//to check
-public class Position implements Serializable {
+public class Position  extends Auditable<String> implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,21 +64,21 @@ public class Position implements Serializable {
     @Column(length = 255)
     private String departement;
 
-    @NotNull(message = "Champs obligatoire")
-    @NotEmpty(message = "Champs obligatoire")
-    @Size(max = 255, message = "255 caractères au maximum")
-    @Column(length = 255)
-    private String commune;
+    // @NotNull(message = "Champs obligatoire")
+    // @NotEmpty(message = "Champs obligatoire")
+    // @Size(max = 255, message = "255 caractères au maximum")
+    // @Column(length = 255)
+    // private String commune;
 
-    @NotNull(message = "Champs obligatoire")
-    @NotEmpty(message = "Champs obligatoire")
-    @Size(max = 255, message = "255 caractères au maximum")
-    @Column(name="section_communale", length = 255)
-    private String sectionCommunale;
+    // @NotNull(message = "Champs obligatoire")
+    // @NotEmpty(message = "Champs obligatoire")
+    // @Size(max = 255, message = "255 caractères au maximum")
+    // @Column(name="section_communale", length = 255)
+    // private String sectionCommunale;
 
-    @Size(max = 255, message = "255 caractères au maximum")
-    @Column(length = 255)
-    private String adresse;
+    // @Size(max = 255, message = "255 caractères au maximum")
+    // @Column(length = 255)
+    // private String adresse;
 
 
     @Column(columnDefinition = "geometry(Point)", name = "geom")

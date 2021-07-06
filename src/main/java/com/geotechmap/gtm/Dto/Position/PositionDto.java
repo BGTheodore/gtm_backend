@@ -12,9 +12,9 @@ public class PositionDto{
     private double longitude;
     private double altitude;
     private String departement;
-    private String commune;
-    private String sectionCommunale;
-    private String adresse;
+    // private String commune;
+    // private String sectionCommunale;
+    // private String adresse;
     @JsonIgnore
     private Point geom; 
 }

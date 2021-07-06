@@ -29,8 +29,8 @@ import org.hibernate.annotations.Where;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE utilisateurs SET is_deleted = true WHERE id = ?")
-@Where(clause = "is_deleted is false")
+// @SQLDelete(sql = "UPDATE utilisateurs SET is_deleted = true WHERE id = ?")
+// @Where(clause = "is_deleted is false")
 
 @EqualsAndHashCode(callSuper=false)//to check
 public class Utilisateur extends Auditable<String>  {

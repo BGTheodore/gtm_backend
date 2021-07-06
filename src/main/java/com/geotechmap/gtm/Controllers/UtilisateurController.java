@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.geotechmap.gtm.Dto.Utilisateur.UtilisateurDto;
 import com.geotechmap.gtm.Dto.Utilisateur.UtilisateurDtoResponse;
+import com.geotechmap.gtm.Entities.Utilisateur;
 import com.geotechmap.gtm.Repositories.UtilisateurRepository;
 import com.geotechmap.gtm.Services.UtilisateurService;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,6 +69,12 @@ public class UtilisateurController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUtilisateur(@PathVariable Long id){
         service.deleteUtilisateur(id);
+    }
+
+    @GetMapping(path = "/search")
+    public  ResponseEntity<Utilisateur>  rechercheParUsername(@RequestParam String username) throws ParseException {
+        //trim mot_cle
+        return ResponseEntity.ok().body(service.rechercheParUsername(username));
     }
 
 }

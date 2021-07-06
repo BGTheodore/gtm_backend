@@ -59,9 +59,9 @@ public class EssaiRepositoryTests {
         position.setLongitude(2.3);
         position.setAltitude(3.4);
         position.setDepartement("Ouest");
-        position.setCommune("Pétion-Ville");
-        position.setSectionCommunale("Une section communale");
-        position.setAdresse("#41, Rue Chanvannes prolongée");
+        // position.setCommune("Pétion-Ville");
+        // position.setSectionCommunale("Une section communale");
+        // position.setAdresse("#41, Rue Chanvannes prolongée");
 
         Fichier fichier = new Fichier();
         // fichier.setLien("www.gtm.fichiers/245456545.pdf");
