@@ -1,5 +1,7 @@
 package com.geotechmap.gtm.Services;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,36 +9,43 @@ import com.geotechmap.gtm.Dto.Position.PositionDto;
 import com.geotechmap.gtm.Entities.Position;
 import com.geotechmap.gtm.Exception.ResourceNotFoundException;
 import com.geotechmap.gtm.Repositories.PositionRepository;
+import com.geotechmap.gtm.Util.CurrentUserUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
+import org.modelmapper.ModelMapper;
 
 @Service
 public class PositionService {
     @Autowired
     PositionRepository repository;
 
-    public Position createNewPosition(PositionDto position) {
+    final ModelMapper modelMapper = new ModelMapper();
+  
+    private PositionDto convertToDto(Position position) {
+        PositionDto positionDto = modelMapper.map(position, PositionDto.class);
+        return positionDto;
+    }
+
+    private Position convertToEntity(PositionDto positionDto) throws ParseException {
+        Position position = modelMapper.map(positionDto, Position.class);
+        return position;
+    }
+    //_________________________
+    
+    public PositionDto createNewPosition(PositionDto positionDto) throws ParseException {
         GeometryFactory geometryFactory = new GeometryFactory();
-        Coordinate coordinate = new Coordinate(position.getLatitude(), position.getLongitude());
+        Coordinate coordinate = new Coordinate(positionDto.getLatitude(), positionDto.getLongitude());
         Point point = geometryFactory.createPoint(coordinate);
         point.setSRID(3857);
-        position.setGeom(point);
+        positionDto.setGeom(point);
 
-        Position savedPosition =  new Position();
-        savedPosition.setAdresse(position.getAdresse());
-        savedPosition.setAltitude(position.getAltitude());
-        savedPosition.setCommune(position.getCommune());
-        savedPosition.setSectionCommunale(position.getSectionCommunale());
-        savedPosition.setDepartement(position.getDepartement());
-        savedPosition.setGeom(position.getGeom());
-   
-
-
-        return repository.save(savedPosition);
+        Position position = convertToEntity(positionDto);
+        Position savedPosition = repository.save(position);
+        return convertToDto(savedPosition);
     }
 
     public List<Position> listAllPositions() {

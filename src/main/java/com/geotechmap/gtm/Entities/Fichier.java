@@ -25,7 +25,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "is_deleted is false")
 
 @EqualsAndHashCode(callSuper=false)//to check
-public class Fichier extends Auditable<String>{
+public class Fichier  extends Auditable<String> {
    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

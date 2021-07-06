@@ -11,6 +11,7 @@ import com.geotechmap.gtm.Entities.Fichier;
 import com.geotechmap.gtm.Entities.Institution;
 import com.geotechmap.gtm.Entities.Position;
 import com.geotechmap.gtm.Entities.TypeEssai;
+import com.geotechmap.gtm.Entities.Utilisateur;
 import com.geotechmap.gtm.Repositories.EssaiRepository;
 import com.geotechmap.gtm.Services.EssaiService;
 
@@ -50,14 +51,17 @@ public class EssaiRepositoryTests {
         institution.setNumeroFiscal("RR-32323");
         institution.setDescription("Lorem ipsum dolor.");
 
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setIdKeycloak("nweibi");
+
         Position position = new Position();
         position.setAltitude(1.2);;
         position.setLongitude(2.3);
         position.setAltitude(3.4);
         position.setDepartement("Ouest");
-        position.setCommune("Pétion-Ville");
-        position.setSectionCommunale("Une section communale");
-        position.setAdresse("#41, Rue Chanvannes prolongée");
+        // position.setCommune("Pétion-Ville");
+        // position.setSectionCommunale("Une section communale");
+        // position.setAdresse("#41, Rue Chanvannes prolongée");
 
         Fichier fichier = new Fichier();
         // fichier.setLien("www.gtm.fichiers/245456545.pdf");

@@ -4,7 +4,7 @@ import com.geotechmap.gtm.Entities.Auditable;
 import lombok.Data;
 
 @Data
-public class FichierDto extends Auditable<String>{
+public class FichierDto{
     private Long id;
     private String nom;
     private String lien;

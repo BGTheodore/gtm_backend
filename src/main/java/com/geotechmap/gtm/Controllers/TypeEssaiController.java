@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import com.geotechmap.gtm.Dto.TypeEssai.TypeEssaiDto;
+import com.geotechmap.gtm.Dto.TypeEssai.TypeEssaiDtoResponse;
 import com.geotechmap.gtm.Entities.TypeEssai;
 import com.geotechmap.gtm.Repositories.TypeEssaiRepository;
 import com.geotechmap.gtm.Services.TypeEssaiService;
@@ -34,7 +35,6 @@ import org.springframework.data.domain.Sort.Order;
 
 @RestController
 @RequestMapping("/api/type_essais")
-
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class TypeEssaiController {
     @Autowired
@@ -44,7 +44,7 @@ public class TypeEssaiController {
     //Create a TypeEssai
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public TypeEssaiDto createNewTypeEssai(@Valid @RequestBody TypeEssaiDto typeEssaiDto) throws ParseException {         
+    public TypeEssaiDtoResponse createNewTypeEssai(@Valid @RequestBody TypeEssaiDto typeEssaiDto) throws ParseException {         
         return service.createNewTypeEssai(typeEssaiDto);
     }
 
@@ -76,13 +76,13 @@ public class TypeEssaiController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public TypeEssaiDto getTypeEssai(@PathVariable Long id){
+    public TypeEssaiDtoResponse getTypeEssai(@PathVariable Long id){
         return service.getTypeEssai(id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<TypeEssaiDto> updateTypeEssai(@RequestBody TypeEssaiDto typeEssaiDto, @PathVariable Long id) throws ParseException {
+    public ResponseEntity<TypeEssaiDtoResponse> updateTypeEssai(@RequestBody TypeEssaiDto typeEssaiDto, @PathVariable Long id) throws ParseException {
         return ResponseEntity.ok().body(service.updateTypeEssai(id, typeEssaiDto));
     }
 

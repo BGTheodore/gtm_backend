@@ -6,6 +6,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import com.geotechmap.gtm.Dto.Institution.InstitutionDto;
+import com.geotechmap.gtm.Dto.Institution.InstitutionDtoResponse;
 import com.geotechmap.gtm.Repositories.InstitutionRepository;
 import com.geotechmap.gtm.Services.InstitutionService;
 
@@ -25,9 +26,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
+
 @RestController
 @RequestMapping("/api/institutions")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class InstitutionController {
     @Autowired
     InstitutionService service;
@@ -37,7 +39,7 @@ public class InstitutionController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public InstitutionDto createNewInstitution(@Valid @RequestBody InstitutionDto institutionDto) throws ParseException {
+    public InstitutionDtoResponse createNewInstitution(@Valid @RequestBody InstitutionDto institutionDto) throws ParseException {
         return service.createNewInstitution(institutionDto);
     }
 
@@ -52,13 +54,13 @@ public class InstitutionController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public InstitutionDto getInstitution(@PathVariable Long id){
+    public InstitutionDtoResponse getInstitution(@PathVariable Long id){
         return service.getInstitution(id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<InstitutionDto> updateInstitution(@RequestBody InstitutionDto institutionDto, @PathVariable Long id) throws ParseException {
+    public ResponseEntity<InstitutionDtoResponse> updateInstitution(@RequestBody InstitutionDto institutionDto, @PathVariable Long id) throws ParseException {
         return ResponseEntity.ok().body(service.updateInstitution(id, institutionDto));
     }
 

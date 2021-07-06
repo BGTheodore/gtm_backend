@@ -1,13 +1,21 @@
 package com.geotechmap.gtm.Services;
 
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,6 +34,7 @@ import com.geotechmap.gtm.Entities.TypeEssai;
 import com.geotechmap.gtm.Exception.ResourceNotFoundException;
 import com.geotechmap.gtm.Repositories.EssaiRepository;
 import com.geotechmap.gtm.Repositories.TypeEssaiRepository;
+import com.geotechmap.gtm.Util.CurrentUserUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,10 +44,16 @@ import org.locationtech.jts.geom.Point;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import java.util.Date;
+import java.util.HashMap;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import org.springframework.core.env.Environment;
+
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
+
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 
@@ -80,10 +95,16 @@ public class EssaiService {
     
     //_______________________
     
-    public EssaiDtoResponse createNewEssai(@Valid EssaiDto essaiDto) {
+    public EssaiDtoResponse createNewEssai(@Valid EssaiDto essaiDto)  {
         EssaiDtoResponse essaiDtoResponse = new EssaiDtoResponse();
         essaiDtoResponse.setEssaiDto(null);
        try{
+        //___ Audit
+            essaiDto.setCreatedBy(CurrentUserUtil.getUsername());
+            essaiDto.setLastModifiedBy(CurrentUserUtil.getUsername());
+            essaiDto.setCreatedDate(new Date());
+            essaiDto.setLastModifiedDate(new Date());
+        //___ Fin Audit
         //___AJOUTER POINT GEOGRAPHIQUE DANS PODITION 
             GeometryFactory geometryFactory = new GeometryFactory();
             Coordinate coordinate = new Coordinate(essaiDto.getPosition().getLatitude(), essaiDto.getPosition().getLongitude());
@@ -102,8 +123,11 @@ public class EssaiService {
 
         Essai essai = convertToEntity(essaiDto);
       
-   
             Essai essaiCreated =  repository.save(essai);
+
+            //__save image to file server
+            
+            //__ fin save image to file server
 
             essaiDtoResponse.setEssaiDto(convertToDto(essaiCreated));
             essaiDtoResponse.setMessage("Succès !");
@@ -137,31 +161,51 @@ public class EssaiService {
     
 
 
-    public EssaiDto updateEssai(Long id, EssaiDto essaiDto) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public EssaiDtoResponse updateEssai(Long id, EssaiDto essaiDto) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
         Optional<Essai> optional = repository.findById(id);
         if (!optional.isPresent()) {
         throw new ResourceNotFoundException("Essai not found with id :" + id);
         } else {
-           
-             //___AJOUTER POINT GEOGRAPHIQUE DANS PODITION 
-                GeometryFactory geometryFactory = new GeometryFactory();
-                Coordinate coordinate = new Coordinate(essaiDto.getPosition().getLatitude(), essaiDto.getPosition().getLongitude());
-                Point point = geometryFactory.createPoint(coordinate);
-                point.setSRID(3857);//Nous devons choisir un SRID (old 4326) WGS84
-                essaiDto.getPosition().setGeom(point);
-            //___COMPLETER INFORMATIONS DU FICHIER 
-                Date date = new Date();
-                String nomInitial = essaiDto.getFichier().getNom();
-                String nomUniqueDuFichier = nomInitial.substring(0, nomInitial.length() - 3)+ new Timestamp(date.getTime()) + ".pdf";
-                nomUniqueDuFichier = nomUniqueDuFichier.replace(' ','-');
-                String hashDuNomDeFichier = hashString(nomUniqueDuFichier);
-                String hashDuNomDeFichierSansCaractereCompromettant =  hashDuNomDeFichier.replace('/','-');
-                essaiDto.getFichier().setHashNomFichier(hashDuNomDeFichierSansCaractereCompromettant);
-                essaiDto.getFichier().setHashPdf(hashString(essaiDto.getPdf()));
-                System.out.println("Nou pral edit+++++++++++++++++++++++++++++++++++++++++++++:"+essaiDto);
-            Essai essai = convertToEntity(essaiDto);
-            essai.setId(id);
-            return convertToDto(repository.save(essai));
+             EssaiDtoResponse essaiDtoResponse = new EssaiDtoResponse();
+             essaiDtoResponse.setEssaiDto(null);
+            try {
+            
+            //___AJOUTER POINT GEOGRAPHIQUE DANS PODITION 
+               GeometryFactory geometryFactory = new GeometryFactory();
+               Coordinate coordinate = new Coordinate(essaiDto.getPosition().getLatitude(), essaiDto.getPosition().getLongitude());
+               Point point = geometryFactory.createPoint(coordinate);
+               point.setSRID(3857);//Nous devons choisir un SRID (old 4326) WGS84
+               essaiDto.getPosition().setGeom(point);
+           //___COMPLETER INFORMATIONS DU FICHIER 
+               Date date = new Date();
+               String nomInitial = essaiDto.getFichier().getNom();
+               String nomUniqueDuFichier = nomInitial.substring(0, nomInitial.length() - 3)+ new Timestamp(date.getTime()) + ".pdf";
+               nomUniqueDuFichier = nomUniqueDuFichier.replace(' ','-');
+               String hashDuNomDeFichier = hashString(nomUniqueDuFichier);
+               String hashDuNomDeFichierSansCaractereCompromettant =  hashDuNomDeFichier.replace('/','-');
+               essaiDto.getFichier().setHashNomFichier(hashDuNomDeFichierSansCaractereCompromettant);
+               essaiDto.getFichier().setHashPdf(hashString(essaiDto.getPdf()));
+                //___ Audit
+                    //___essai
+                    essaiDto.setCreatedBy(optional.get().getCreatedBy());
+                    essaiDto.setCreatedDate(optional.get().getCreatedDate());
+                    essaiDto.setLastModifiedBy(CurrentUserUtil.getUsername());
+                    essaiDto.setLastModifiedDate(new Date());
+                //___ Fin Audit
+               Essai essai = convertToEntity(essaiDto);
+             
+           essai.setId(id);
+
+           Essai essaiCreated =  repository.save(essai);
+           essaiDtoResponse.setEssaiDto(convertToDto(essaiCreated));
+        
+       
+           essaiDtoResponse.setMessage("Succès !");
+            } catch (Exception e) {
+                //TODO: handle exceptionessaiDtoResponse
+            }
+            System.out.println(essaiDtoResponse);
+            return essaiDtoResponse;
         }
     }
 
@@ -221,23 +265,45 @@ public class EssaiService {
     }
 
     //============================
+public Object postFile() throws IOException{
+    System.out.print("000000000000000000000000000000000000000000000000");
+    URL url = new URL("http://localhost:8081/api/file");
+    URLConnection con = url.openConnection();
+    HttpURLConnection http = (HttpURLConnection)con;
+    http.setRequestMethod("POST"); 
+    http.setDoOutput(true);
 
-    public PositionDto genererStucturePosition(@Valid EssaiDto essaiDto) {
+    byte[] out = "{\"username\":\"root\",\"password\":\"password\"}" .getBytes(StandardCharsets.UTF_8);
+    int length = out.length;
+
+    http.setFixedLengthStreamingMode(length);
+    http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+    http.connect();
+    try(OutputStream os = http.getOutputStream()) {
+        os.write(out);
+}
+
+
+	return http;
+}
+    // public PositionDto genererStucturePosition(@Valid EssaiDto essaiDto) {
         
-        GeometryFactory geometryFactory = new GeometryFactory();
-        Coordinate coordinate = new Coordinate(essaiDto.getPosition().getLatitude(), essaiDto.getPosition().getLongitude());
-        Point point = geometryFactory.createPoint(coordinate);
-        point.setSRID(3857);//Nous devons choisir un SRID (old 4326) WGS84
-        PositionDto position = essaiDto.getPosition();
-        position.setGeom(point);
-        position.setLatitude(essaiDto.getPosition().getLatitude());
-        position.setLongitude(essaiDto.getPosition().getLongitude());
-        position.setAltitude(essaiDto.getPosition().getAltitude());
-        position.setDepartement(essaiDto.getPosition().getDepartement());
-        position.setCommune(essaiDto.getPosition().getCommune());
-        position.setSectionCommunale(essaiDto.getPosition().getSectionCommunale());
-        return position;
+    //     GeometryFactory geometryFactory = new GeometryFactory();
+    //     Coordinate coordinate = new Coordinate(essaiDto.getPosition().getLatitude(), essaiDto.getPosition().getLongitude());
+    //     Point point = geometryFactory.createPoint(coordinate);
+    //     point.setSRID(3857);//Nous devons choisir un SRID (old 4326) WGS84
+    //     PositionDto position = essaiDto.getPosition();
+    //     position.setGeom(point);
+    //     position.setLatitude(essaiDto.getPosition().getLatitude());
+    //     position.setLongitude(essaiDto.getPosition().getLongitude());
+    //     position.setAltitude(essaiDto.getPosition().getAltitude());
+    //     position.setDepartement(essaiDto.getPosition().getDepartement());
+    //     position.setCommune(essaiDto.getPosition().getCommune());
+    //     position.setSectionCommunale(essaiDto.getPosition().getSectionCommunale());
+    //     return position;
         
-    }
+    // }
+
+   
 
 }

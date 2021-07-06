@@ -1,5 +1,6 @@
 package com.geotechmap.gtm.Controllers;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,8 +39,8 @@ public class PositionController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Position> createNewPosition(@Valid @RequestBody PositionDto position){
-        Position createdPosition = service.createNewPosition(position);
+    public ResponseEntity<PositionDto> createNewPosition(@Valid @RequestBody PositionDto positionDto) throws ParseException{
+        PositionDto createdPosition = service.createNewPosition(positionDto);
         return new ResponseEntity<>(createdPosition, HttpStatus.CREATED);
     }
 
