@@ -24,6 +24,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.validation.Valid;
 
+import com.geotechmap.gtm.Dto.Essai.EssaiDetailsDto;
 import com.geotechmap.gtm.Dto.Essai.EssaiDto;
 import com.geotechmap.gtm.Dto.Essai.EssaiDtoResponse;
 import com.geotechmap.gtm.Dto.Position.PositionDto;
@@ -154,6 +155,11 @@ public class EssaiService {
         essaiDto = modelMapper.map(essais, listType);
         return essaiDto;
         }
+
+    // public List<EssaiDetailsDto> listAllEssais() {
+    //     List<EssaiDetailsDto> essaisDetailsDto = repository.findAllFromView();
+    //     return essaisDetailsDto;
+    //     }
 
     public List<Essai> getAllEssaisRegroupeParCategorie() {
         return repository.getAllEssaisRegroupeParCategorie();

@@ -16,6 +16,7 @@ import com.geotechmap.gtm.Util.CurrentUserUtil;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -49,12 +50,21 @@ public class TypeEssaiService {
         TypeEssai typeEssai = convertToEntity(typeEssaiDto);
         TypeEssai typeEssaiCreated = repository.save(typeEssai);
         typeEssaiDtoResponse.setTypeEssaiDto(convertToDto(typeEssaiCreated));
-        typeEssaiDtoResponse.setMessage("Succès !");
+        typeEssaiDtoResponse.setMessage("success");
         }catch(IllegalArgumentException e){
-            //
+            typeEssaiDtoResponse.setMessage(e.getMessage());
         }
-        return typeEssaiDtoResponse;
+        catch(DataIntegrityViolationException e){
+            typeEssaiDtoResponse.setMessage(e.getMessage());
         }
+        catch(ParseException e){
+            typeEssaiDtoResponse.setMessage(e.getMessage());
+        }finally{
+            return typeEssaiDtoResponse;
+        }
+    }
+
+
 
     public List<TypeEssaiDto> listAllTypeEssais() {
         List<TypeEssaiDto> typeEssaiDto;

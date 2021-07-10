@@ -12,6 +12,7 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
+import com.geotechmap.gtm.Dto.Essai.EssaiDetailsDto;
 import com.geotechmap.gtm.Dto.Essai.EssaiDto;
 import com.geotechmap.gtm.Dto.Essai.EssaiDtoResponse;
 import com.geotechmap.gtm.Dto.Fichier.FichierDto;
@@ -102,6 +103,7 @@ public class EssaiController {
     // }
 
     @PostMapping
+    @RolesAllowed({"OPERATEUR"})
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public EssaiDtoResponse createNewEssai(@RequestBody @Valid EssaiDto essaiDto
@@ -111,6 +113,11 @@ public class EssaiController {
     }
 
     
+    // @GetMapping
+    // @ResponseStatus(HttpStatus.OK)
+    // public  ResponseEntity<List<EssaiDto>>  getAllEssais(){
+    //     return ResponseEntity.ok().body(service.listAllEssais());
+    // }
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public  ResponseEntity<List<EssaiDto>>  getAllEssais(){
@@ -118,6 +125,7 @@ public class EssaiController {
     }
 
     @PutMapping("/{id}")
+    @RolesAllowed({"ADMIN_INSTITUTION", "OPERATEUR"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<EssaiDtoResponse> updateEssai(@RequestBody EssaiDto essaiDto, @PathVariable Long id) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException {  
         return ResponseEntity.ok().body(service.updateEssai(id, essaiDto));
@@ -155,6 +163,7 @@ public class EssaiController {
     }
 
     @DeleteMapping("/{id}")
+    @RolesAllowed({"ADMIN_INSTITUTION", "OPERATEUR"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
         public void deleteEssai(@PathVariable Long id) {
             service.deleteEssai(id);

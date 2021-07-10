@@ -39,6 +39,7 @@ public class EssaiRepositoryTests {
         TypeEssai typeEssai = new TypeEssai();
         typeEssai.setNom("Teneur en eau");
 		typeEssai.setSigle("TEE");
+        typeEssai.setCodeCouleur("0077FF");;
 		typeEssai.setDescription("Test servant faire calculer la teneur en eau d'un terrain");
 
         Institution institution = new Institution();

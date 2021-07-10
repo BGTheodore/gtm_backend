@@ -2,6 +2,7 @@ package com.geotechmap.gtm.Repositories;
 
 import java.util.List;
 
+import com.geotechmap.gtm.Dto.Essai.EssaiDetailsDto;
 import com.geotechmap.gtm.Entities.Essai;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +18,10 @@ public interface EssaiRepository extends JpaRepository<Essai, Long> {
 
     @Query(value = "SELECT * FROM essais e GROUP BY e.id_type_essai", nativeQuery = true)
     List<Essai> getAllEssaisRegroupeParCategorie();
+
+    @Query(value = "SELECT * FROM essais_details", nativeQuery = true)
+    List<EssaiDetailsDto> findAllFromView();
+
+
 }
 

@@ -37,6 +37,7 @@ public class InstitutionController {
 
     
     @PostMapping()
+    @RolesAllowed({"SUPER_ADMIN"})
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public InstitutionDtoResponse createNewInstitution(@Valid @RequestBody InstitutionDto institutionDto) throws ParseException {
@@ -45,7 +46,6 @@ public class InstitutionController {
 
 
     @GetMapping
-    // @RolesAllowed({"SUPER_ADMIN"})
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<InstitutionDto>> getAllInstitutions(){
@@ -59,12 +59,14 @@ public class InstitutionController {
     }
 
     @PutMapping("/{id}")
+    @RolesAllowed({"SUPER_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<InstitutionDtoResponse> updateInstitution(@RequestBody InstitutionDto institutionDto, @PathVariable Long id) throws ParseException {
         return ResponseEntity.ok().body(service.updateInstitution(id, institutionDto));
     }
 
     @DeleteMapping("/{id}")
+    @RolesAllowed({"SUPER_ADMIN"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteInstitution(@PathVariable Long id){
         service.deleteInstitution(id);

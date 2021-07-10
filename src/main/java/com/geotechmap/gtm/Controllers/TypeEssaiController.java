@@ -3,6 +3,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import com.geotechmap.gtm.Dto.TypeEssai.TypeEssaiDto;
@@ -43,6 +44,7 @@ public class TypeEssaiController {
 
     //Create a TypeEssai
     @PostMapping()
+    @RolesAllowed({"SUPER_ADMIN"})
     @ResponseStatus(HttpStatus.CREATED)
     public TypeEssaiDtoResponse createNewTypeEssai(@Valid @RequestBody TypeEssaiDto typeEssaiDto) throws ParseException {         
         return service.createNewTypeEssai(typeEssaiDto);
@@ -81,12 +83,14 @@ public class TypeEssaiController {
     }
 
     @PutMapping("/{id}")
+    @RolesAllowed({"SUPER_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<TypeEssaiDtoResponse> updateTypeEssai(@RequestBody TypeEssaiDto typeEssaiDto, @PathVariable Long id) throws ParseException {
         return ResponseEntity.ok().body(service.updateTypeEssai(id, typeEssaiDto));
     }
 
     @DeleteMapping("/{id}")
+    @RolesAllowed({"SUPER_ADMIN"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
         public void deleteTypeEssai(@PathVariable Long id) {
             service.deleteTypeEssai(id);
