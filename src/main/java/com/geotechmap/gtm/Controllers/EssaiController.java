@@ -113,16 +113,16 @@ public class EssaiController {
     }
 
     
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public  ResponseEntity<List<EssaiDetailsDto>>  getAllEssais(){
+        return ResponseEntity.ok().body(service.listAllEssais());
+    }
     // @GetMapping
     // @ResponseStatus(HttpStatus.OK)
     // public  ResponseEntity<List<EssaiDto>>  getAllEssais(){
     //     return ResponseEntity.ok().body(service.listAllEssais());
     // }
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public  ResponseEntity<List<EssaiDto>>  getAllEssais(){
-        return ResponseEntity.ok().body(service.listAllEssais());
-    }
 
     @PutMapping("/{id}")
     @RolesAllowed({"ADMIN_INSTITUTION", "OPERATEUR"})

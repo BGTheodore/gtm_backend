@@ -19,7 +19,7 @@ public interface EssaiRepository extends JpaRepository<Essai, Long> {
     @Query(value = "SELECT * FROM essais e GROUP BY e.id_type_essai", nativeQuery = true)
     List<Essai> getAllEssaisRegroupeParCategorie();
 
-    @Query(value = "SELECT * FROM essais_details", nativeQuery = true)
+    @Query(value = "SELECT * FROM v_essais_details", nativeQuery = true)
     List<EssaiDetailsDto> findAllFromView();
 
 

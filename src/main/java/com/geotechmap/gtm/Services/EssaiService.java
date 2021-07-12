@@ -30,9 +30,11 @@ import com.geotechmap.gtm.Dto.Essai.EssaiDtoResponse;
 import com.geotechmap.gtm.Dto.Position.PositionDto;
 import com.geotechmap.gtm.Dto.TypeEssai.TypeEssaiDto;
 import com.geotechmap.gtm.Entities.Essai;
+import com.geotechmap.gtm.Entities.EssaiDetails;
 import com.geotechmap.gtm.Entities.Position;
 import com.geotechmap.gtm.Entities.TypeEssai;
 import com.geotechmap.gtm.Exception.ResourceNotFoundException;
+import com.geotechmap.gtm.Repositories.EssaiDetailsRepository;
 import com.geotechmap.gtm.Repositories.EssaiRepository;
 import com.geotechmap.gtm.Repositories.TypeEssaiRepository;
 import com.geotechmap.gtm.Util.CurrentUserUtil;
@@ -62,6 +64,8 @@ import java.util.Base64;
 public class EssaiService {
     @Autowired
     EssaiRepository repository;
+    @Autowired
+    EssaiDetailsRepository essaiDetailsRepository;
     @Autowired
     TypeEssaiService typeEssaiService;
     @Autowired
@@ -148,18 +152,21 @@ public class EssaiService {
         return essaiDtoResponse;
         }
 
-    public List<EssaiDto> listAllEssais() {
-        List<EssaiDto> essaiDto;
-        List<Essai> essais = repository.findAll();
-        Type listType = new TypeToken<List<EssaiDto>>() {}.getType();
-        essaiDto = modelMapper.map(essais, listType);
-        return essaiDto;
-        }
-
-    // public List<EssaiDetailsDto> listAllEssais() {
-    //     List<EssaiDetailsDto> essaisDetailsDto = repository.findAllFromView();
-    //     return essaisDetailsDto;
+    // public List<EssaiDto> listAllEssais() {
+    //     List<EssaiDto> essaiDto;
+    //     List<Essai> essais = repository.findAll();
+    //     Type listType = new TypeToken<List<EssaiDto>>() {}.getType();
+    //     essaiDto = modelMapper.map(essais, listType);
+    //     return essaiDto;
     //     }
+
+    public List<EssaiDetailsDto> listAllEssais() {
+        List<EssaiDetailsDto> essaiDetailsDto;
+        List<EssaiDetails> essaisDetails = essaiDetailsRepository.findAllFromView();
+        Type listType = new TypeToken<List<EssaiDetailsDto>>() {}.getType();
+        essaiDetailsDto = modelMapper.map(essaisDetails, listType);
+        return essaiDetailsDto;
+        }
 
     public List<Essai> getAllEssaisRegroupeParCategorie() {
         return repository.getAllEssaisRegroupeParCategorie();

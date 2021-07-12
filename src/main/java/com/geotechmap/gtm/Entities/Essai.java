@@ -53,7 +53,7 @@ public class Essai extends Auditable<String>  {
     // private String naturalId;
 
     //@JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="id_type_essai", nullable = false)
     private TypeEssai typeEssai;
 
@@ -77,6 +77,10 @@ public class Essai extends Auditable<String>  {
     @Size(max = 255, message = "255 caractères au maximum")
     @Column(name="commentaire", length = 255)
     private String commentaire;
+
+    @Size(max = 20, message = "20 caractères au maximum")
+    @Column(name="date_realisation", length = 255)
+    private String dateRealisation;
 
     @Transient //to not persist in DB
     @Lob // large object
