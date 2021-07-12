@@ -17,6 +17,7 @@ public class TypeEssaiDto extends Auditable<String> implements Serializable {
     private String nom;
     private String sigle;
     private String description;
+    private String codeCouleur;
     //@JsonManagedReference
     private List<EssaiDto> essais;
 

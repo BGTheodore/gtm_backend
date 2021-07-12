@@ -29,6 +29,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.bouncycastle.util.Objects;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -62,6 +63,11 @@ public class TypeEssai extends Auditable<String> {
     @Size(max = 255, message = "255 caractères au maximum")
     @Column(length = 255)
     private String description;
+
+    @Size(max = 10, message = "10 caractères au maximum")
+    @Column(name="code_couleur", length = 10)
+    private String codeCouleur="0077FF" ;
+    // varchar(255) default '15-JUL-1980'"
 
 
     // implement hashCode() and equals()

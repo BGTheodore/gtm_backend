@@ -12,6 +12,7 @@ import com.geotechmap.gtm.Repositories.InstitutionRepository;
 import com.geotechmap.gtm.Util.CurrentUserUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.modelmapper.TypeToken;
 import java.lang.reflect.Type;
@@ -37,7 +38,7 @@ public class InstitutionService {
     }
     //_________________________
     
-    public InstitutionDtoResponse createNewInstitution(InstitutionDto institutionDto) throws ParseException{
+    public InstitutionDtoResponse createNewInstitution(InstitutionDto institutionDto) {
         InstitutionDtoResponse institutionDtoResponse = new InstitutionDtoResponse();
         institutionDtoResponse.setInstitutionDto(null);
         try{
@@ -52,9 +53,20 @@ public class InstitutionService {
         institutionDtoResponse.setInstitutionDto(convertToDto(institutionCreated));
         institutionDtoResponse.setMessage("Succès !");
     }catch(IllegalArgumentException e){
-        //
+        institutionDtoResponse.setMessage(e.getMessage());
     }
+    catch(DataIntegrityViolationException e){
+        institutionDtoResponse.setMessage(e.getMessage());
+        System.out.println("=================="+institutionDto);
+    }
+    catch(ParseException e){
+        institutionDtoResponse.setMessage(e.getMessage());
+        System.out.println("=================="+institutionDto);
+    }finally{
+         System.out.println("=================="+institutionDto);
     return institutionDtoResponse;
+    }
+   
     }
 
     public List<InstitutionDto> listAllInstitutions(){
