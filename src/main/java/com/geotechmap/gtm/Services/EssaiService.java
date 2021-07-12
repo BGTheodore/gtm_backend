@@ -175,13 +175,13 @@ public class EssaiService {
 
 
     public EssaiDtoResponse updateEssai(Long id, EssaiDto essaiDto) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
-        Optional<Essai> optional = repository.findById(id);
+          Optional<Essai> optional = repository.findById(id);
         if (!optional.isPresent()) {
         throw new ResourceNotFoundException("Essai not found with id :" + id);
         } else {
              EssaiDtoResponse essaiDtoResponse = new EssaiDtoResponse();
              essaiDtoResponse.setEssaiDto(null);
-            try {
+            // try {
             
             //___AJOUTER POINT GEOGRAPHIQUE DANS PODITION 
                GeometryFactory geometryFactory = new GeometryFactory();
@@ -190,34 +190,36 @@ public class EssaiService {
                point.setSRID(3857);//Nous devons choisir un SRID (old 4326) WGS84
                essaiDto.getPosition().setGeom(point);
            //___COMPLETER INFORMATIONS DU FICHIER 
-               Date date = new Date();
-               String nomInitial = essaiDto.getFichier().getNom();
-               String nomUniqueDuFichier = nomInitial.substring(0, nomInitial.length() - 3)+ new Timestamp(date.getTime()) + ".pdf";
-               nomUniqueDuFichier = nomUniqueDuFichier.replace(' ','-');
-               String hashDuNomDeFichier = hashString(nomUniqueDuFichier);
-               String hashDuNomDeFichierSansCaractereCompromettant =  hashDuNomDeFichier.replace('/','-');
-               essaiDto.getFichier().setHashNomFichier(hashDuNomDeFichierSansCaractereCompromettant);
-               essaiDto.getFichier().setHashPdf(hashString(essaiDto.getPdf()));
+           Date date = new Date();
+           String nomInitial = essaiDto.getFichier().getNom();
+           String nomUniqueDuFichier = nomInitial.substring(0, nomInitial.length() - 3)+ new Timestamp(date.getTime()) + ".pdf";
+           nomUniqueDuFichier = nomUniqueDuFichier.replace(' ','-');
+           String hashDuNomDeFichier = hashString(nomUniqueDuFichier);
+           String hashDuNomDeFichierSansCaractereCompromettant =  hashDuNomDeFichier.replace('/','-');
+           essaiDto.getFichier().setHashNomFichier(hashDuNomDeFichierSansCaractereCompromettant);
+           essaiDto.getFichier().setHashPdf(hashString(essaiDto.getPdf()));
+           
                 //___ Audit
+                
                     //___essai
                     essaiDto.setCreatedBy(optional.get().getCreatedBy());
                     essaiDto.setCreatedDate(optional.get().getCreatedDate());
                     essaiDto.setLastModifiedBy(CurrentUserUtil.getUsername());
                     essaiDto.setLastModifiedDate(new Date());
                 //___ Fin Audit
+                essaiDto.getFichier().setId(optional.get().getFichier().getId());
+                essaiDto.getPosition().setId(optional.get().getPosition().getId());
+                
                Essai essai = convertToEntity(essaiDto);
-             
            essai.setId(id);
-
-           Essai essaiCreated =  repository.save(essai);
+           Essai essaiCreated = repository.save(essai); 
            essaiDtoResponse.setEssaiDto(convertToDto(essaiCreated));
-        
-       
-           essaiDtoResponse.setMessage("Succès !");
-            } catch (Exception e) {
-                //TODO: handle exceptionessaiDtoResponse
-            }
-            System.out.println(essaiDtoResponse);
+           essaiDtoResponse.setMessage("success");
+            // } catch (Exception e) {
+            //     //TODO: handle exceptionessaiDtoResponse
+            //     System.out.println(e.getMessage());
+            // }
+            // System.out.println("----------------------" + essaiDtoResponse);
             return essaiDtoResponse;
         }
     }
@@ -241,45 +243,23 @@ public class EssaiService {
     }
 
     public List<TypeEssai> rechercheParmotsCles(String mot_cle) {
-        
-        // List<TypeEssai> filteredList;
         List<TypeEssai> originalList = typeEssaiRepository.findAll();
         List<Long> nameFilter = repository.rechercheParmotsCles(mot_cle);
-      
-        // filteredList = originalList.stream()
-        //   .filter(typeEssai -> nameFilter.contains(typeEssai.getEssais()))
-        //   .collect(Collectors.toList());
-
-        for (TypeEssai typeEssai : originalList) {
+        for ( TypeEssai typeEssai : originalList ) {
             Iterator<Essai> i = typeEssai.getEssais().iterator();
             while (i.hasNext()) {
                 Essai s = i.next(); // must be called before you can call i.remove()
-                // Do something
                 if (nameFilter.contains(s.getId()) == false) 
                 {
                     i.remove();
-                }
-                
+                }     
              }
-            // for (Essai essai : typeEssai.getEssais()) {
-            //         if (nameFilter.contains(essai.getId()) ) {
-            //             System.out.println(("----------------------"));
-            //             typeEssai.getEssais().remove(essai);
-
-            //         }              
-            // }
         }
-
-        // List<TypeEssaiDto> typeEssaiDto;
-        //  Type listType = new TypeToken<List<TypeEssaiDto>>() {}.getType();
-        //  typeEssaiDto = modelMapper.map(filteredList, listType);
-        // return typeEssaiDto;
         return originalList;
     }
 
     //============================
 public Object postFile() throws IOException{
-    System.out.print("000000000000000000000000000000000000000000000000");
     URL url = new URL("http://localhost:8081/api/file");
     URLConnection con = url.openConnection();
     HttpURLConnection http = (HttpURLConnection)con;

@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface EssaiDetailsRepository extends JpaRepository<EssaiDetails, Long> {
    
-    @Query(value = "SELECT * FROM v_essais_details", nativeQuery = true)
+    @Query(value = "SELECT * FROM v_essais_details WHERE is_deleted_essai = FALSE", nativeQuery = true)
     List<EssaiDetails> findAllFromView();
 }
 
