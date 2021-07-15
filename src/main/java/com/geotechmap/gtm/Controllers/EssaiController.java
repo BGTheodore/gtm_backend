@@ -171,11 +171,13 @@ public class EssaiController {
             service.deleteEssai(id);
     }
 
+    //__pour display les essais dans le webmap
     @GetMapping(path = "/search")
     public  ResponseEntity<List<TypeEssai>>  rechercheParmotsCles(@RequestParam String mot_cle) throws ParseException {
         //trim mot_cle
         return ResponseEntity.ok().body(service.rechercheParmotsCles(mot_cle));
     }
+    //__fin
 
     @GetMapping(path = "/count")
     public  ResponseEntity<Long>  rechercheParmotsCles() throws ParseException {
@@ -188,6 +190,15 @@ public class EssaiController {
          @RequestParam(value="pageSize") int pageSize ) throws ParseException {
         return service.fetchWithPagination(pageSize, pageNumber);
     }
+
+    // //__pour display les essais filtré dans la liste
+    // @GetMapping(path = "/filter_list")
+    // public  EssaiDetailsDtoResponse  filterList(@RequestParam String mot_cle) throws ParseException {
+    //     //trim mot_cle
+    //     return ResponseEntity.ok().body(service.filterList(mot_cle));
+    //     return service.filterList(pageSize, pageNumber);
+    // }
+    // //__fin
 
 
 
