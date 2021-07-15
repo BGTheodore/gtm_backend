@@ -53,7 +53,7 @@ public class Essai extends Auditable<String>  {
     // private String naturalId;
 
     //@JsonBackReference
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne()
     @JoinColumn(name="id_type_essai", nullable = false)
     private TypeEssai typeEssai;
 
@@ -86,6 +86,10 @@ public class Essai extends Auditable<String>  {
     @Lob // large object
     private String pdf;
 
+public TypeEssai getTypeEssai(){
+        typeEssai.setEssais(null);
+        return typeEssai;
+    }
     // @Override
     // public boolean equals(Object obj) {
     //     if (this == obj) {

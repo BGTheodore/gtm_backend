@@ -95,5 +95,11 @@ public class TypeEssaiController {
         public void deleteTypeEssai(@PathVariable Long id) {
             service.deleteTypeEssai(id);
     }
+
+    @GetMapping(path = "/count")
+    public  ResponseEntity<Long>  rechercheParmotsCles() throws ParseException {
+        return ResponseEntity.ok().body(service.countTypeEssais());
+    }
+
     
 }

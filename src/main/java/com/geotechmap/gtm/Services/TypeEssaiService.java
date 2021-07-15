@@ -10,6 +10,7 @@ import com.geotechmap.gtm.Dto.TypeEssai.TypeEssaiDto;
 import com.geotechmap.gtm.Dto.TypeEssai.TypeEssaiDtoResponse;
 import com.geotechmap.gtm.Entities.TypeEssai;
 import com.geotechmap.gtm.Exception.ResourceNotFoundException;
+import com.geotechmap.gtm.Repositories.EssaiRepository;
 import com.geotechmap.gtm.Repositories.TypeEssaiRepository;
 import com.geotechmap.gtm.Util.CurrentUserUtil;
 
@@ -23,6 +24,8 @@ import org.springframework.stereotype.Service;
 public class TypeEssaiService {
     @Autowired
     TypeEssaiRepository repository;
+    @Autowired
+    EssaiRepository essaiRepository;
     
     final ModelMapper modelMapper = new ModelMapper();
   
@@ -91,7 +94,7 @@ public class TypeEssaiService {
             typeEssai.setId(id);// je dois mettre l'id dans le body et enlever ca en parametre
             TypeEssai typeEssaiCreated =  repository.save(typeEssai);
             typeEssaiDtoResponse.setTypeEssaiDto(convertToDto(typeEssaiCreated));
-            typeEssaiDtoResponse.setMessage("Succès !");
+            typeEssaiDtoResponse.setMessage("success");
         } catch (Exception e) {
             //TODO: handle exceptionessaiDtoResponse
         }
@@ -105,6 +108,7 @@ public class TypeEssaiService {
             throw new ResourceNotFoundException("Type Essai not found with id :" + id);
         } else {
             repository.deleteById(id);
+            essaiRepository.deleteByIdTypeEssai(id);
         }
     }
 
@@ -116,8 +120,12 @@ public class TypeEssaiService {
         throw new ResourceNotFoundException("Type Essai not found with id :" + id);
         } else {
             typeEssaiDtoResponse.setTypeEssaiDto(convertToDto(optional.get()));
-            typeEssaiDtoResponse.setMessage("Succès !");
+            typeEssaiDtoResponse.setMessage("success");
             return typeEssaiDtoResponse;
         }
+    }
+
+    public Long countTypeEssais() {
+        return repository.countTypeEssais();
     }
 }

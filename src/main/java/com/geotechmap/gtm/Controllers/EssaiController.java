@@ -13,12 +13,14 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import com.geotechmap.gtm.Dto.Essai.EssaiDetailsDto;
+import com.geotechmap.gtm.Dto.Essai.EssaiDetailsDtoResponse;
 import com.geotechmap.gtm.Dto.Essai.EssaiDto;
 import com.geotechmap.gtm.Dto.Essai.EssaiDtoResponse;
 import com.geotechmap.gtm.Dto.Fichier.FichierDto;
 import com.geotechmap.gtm.Dto.Position.PositionDto;
 import com.geotechmap.gtm.Dto.TypeEssai.TypeEssaiDto;
 import com.geotechmap.gtm.Entities.Essai;
+import com.geotechmap.gtm.Entities.EssaiDetails;
 import com.geotechmap.gtm.Entities.Fichier;
 import com.geotechmap.gtm.Entities.Position;
 import com.geotechmap.gtm.Entities.TypeEssai;
@@ -173,6 +175,18 @@ public class EssaiController {
     public  ResponseEntity<List<TypeEssai>>  rechercheParmotsCles(@RequestParam String mot_cle) throws ParseException {
         //trim mot_cle
         return ResponseEntity.ok().body(service.rechercheParmotsCles(mot_cle));
+    }
+
+    @GetMapping(path = "/count")
+    public  ResponseEntity<Long>  rechercheParmotsCles() throws ParseException {
+        return ResponseEntity.ok().body(service.countEssais());
+    }
+
+    //__pagination
+    @GetMapping(path = "/fetch_with_pagination")
+    public  EssaiDetailsDtoResponse  fetchWithPagination(@RequestParam(value="pageNumber") int pageNumber, 
+         @RequestParam(value="pageSize") int pageSize ) throws ParseException {
+        return service.fetchWithPagination(pageSize, pageNumber);
     }
 
 

@@ -19,6 +19,9 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
     @Query(value = "SELECT * FROM utilisateurs u WHERE u.username = :username LIMIT 1"
     , nativeQuery = true)
     Utilisateur rechercheParUsername(@Param("username") String username);
+
+    @Query(value = "SELECT COUNT(*) FROM utilisateurs WHERE is_deleted = false", nativeQuery = true)
+    Long countUtilisateurs();
     
 
 }

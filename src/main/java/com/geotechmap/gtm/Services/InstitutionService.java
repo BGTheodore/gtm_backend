@@ -6,8 +6,10 @@ import java.util.Optional;
 
 import com.geotechmap.gtm.Dto.Institution.InstitutionDto;
 import com.geotechmap.gtm.Dto.Institution.InstitutionDtoResponse;
+import com.geotechmap.gtm.Entities.Essai;
 import com.geotechmap.gtm.Entities.Institution;
 import com.geotechmap.gtm.Exception.ResourceNotFoundException;
+import com.geotechmap.gtm.Repositories.EssaiRepository;
 import com.geotechmap.gtm.Repositories.InstitutionRepository;
 import com.geotechmap.gtm.Util.CurrentUserUtil;
 import org.modelmapper.ModelMapper;
@@ -24,6 +26,8 @@ import java.text.SimpleDateFormat;
 public class InstitutionService {
     @Autowired
     InstitutionRepository repository;
+    @Autowired
+    EssaiRepository essaiRepository;
 
     final ModelMapper modelMapper = new ModelMapper();
   
@@ -109,6 +113,7 @@ public class InstitutionService {
             throw new ResourceNotFoundException("Institution not found with id :" + id );
         } else {
             repository.deleteById(id);
+            essaiRepository.deleteByIdInstitution(id);
         }
     }
 
@@ -125,5 +130,9 @@ public class InstitutionService {
        
             return institutionDtoResponse;
         }
+    }
+
+    public Long countInstitutions() {
+        return repository.countInstitutions();
     }
 }
