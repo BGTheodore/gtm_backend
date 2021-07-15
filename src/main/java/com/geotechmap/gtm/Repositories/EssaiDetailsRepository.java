@@ -20,7 +20,7 @@ public interface EssaiDetailsRepository extends
     List<EssaiDetails> findAllFromView();
 
     //__ handle pagination 
-    @Query(value = "SELECT * FROM v_essais_details", 
+    @Query(value = "SELECT * FROM v_essais_details WHERE is_deleted_essai = FALSE", 
         nativeQuery = true)
     Page<EssaiDetails> fetchWithPagination( Pageable pageRequest);
 }

@@ -6,9 +6,10 @@ import com.geotechmap.gtm.Dto.Essai.EssaiDetailsDto;
 import com.geotechmap.gtm.Entities.Essai;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface EssaiRepository extends JpaRepository<Essai, Long> {
    //add where is_deleted=false
@@ -21,10 +22,13 @@ public interface EssaiRepository extends JpaRepository<Essai, Long> {
 
     // @Query(value = "SELECT * FROM v_essais_details WHERE is_deleted_essai = FALSE", nativeQuery = true)
     // List<EssaiDetailsDto> findAllFromView();
-
+    @Transactional
+    @Modifying 
     @Query(value = "UPDATE essais SET is_deleted = TRUE WHERE id_institution = :id", nativeQuery = true)
     void deleteByIdInstitution(@Param("id") Long id);
 
+    @Transactional
+    @Modifying 
     @Query(value = "UPDATE essais SET is_deleted = TRUE WHERE id_type_essai = :id", nativeQuery = true)
     void deleteByIdTypeEssai(@Param("id") Long id);
 
