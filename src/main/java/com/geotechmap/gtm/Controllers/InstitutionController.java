@@ -71,5 +71,10 @@ public class InstitutionController {
     public void deleteInstitution(@PathVariable Long id){
         service.deleteInstitution(id);
     }
+
+    @GetMapping(path = "/count")
+    public  ResponseEntity<Long>  rechercheParmotsCles() throws ParseException {
+        return ResponseEntity.ok().body(service.countInstitutions());
+    }
 }
 

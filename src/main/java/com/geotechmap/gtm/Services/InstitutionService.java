@@ -131,4 +131,8 @@ public class InstitutionService {
             return institutionDtoResponse;
         }
     }
+
+    public Long countInstitutions() {
+        return repository.countInstitutions();
+    }
 }

@@ -27,6 +27,9 @@ public interface EssaiRepository extends JpaRepository<Essai, Long> {
 
     @Query(value = "UPDATE essais SET is_deleted = TRUE WHERE id_type_essai = :id", nativeQuery = true)
     void deleteByIdTypeEssai(@Param("id") Long id);
+
+    @Query(value = "SELECT COUNT(*) FROM essais WHERE is_deleted = false", nativeQuery = true)
+    Long countEssais();
     
 
 

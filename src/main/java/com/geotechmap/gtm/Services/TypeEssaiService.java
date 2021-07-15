@@ -124,4 +124,8 @@ public class TypeEssaiService {
             return typeEssaiDtoResponse;
         }
     }
+
+    public Long countTypeEssais() {
+        return repository.countTypeEssais();
+    }
 }

@@ -125,6 +125,10 @@ public class UtilisateurService {
            Utilisateur utilisateur = repository.rechercheParUsername(username);
            return utilisateur;
         }
+
+        public Long countUtilisateurs() {
+            return repository.countUtilisateurs();
+        }
         
 }
 

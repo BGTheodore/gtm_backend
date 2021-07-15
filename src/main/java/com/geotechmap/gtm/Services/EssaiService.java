@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -25,6 +26,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.validation.Valid;
 
 import com.geotechmap.gtm.Dto.Essai.EssaiDetailsDto;
+import com.geotechmap.gtm.Dto.Essai.EssaiDetailsDtoResponse;
 import com.geotechmap.gtm.Dto.Essai.EssaiDto;
 import com.geotechmap.gtm.Dto.Essai.EssaiDtoResponse;
 import com.geotechmap.gtm.Dto.Position.PositionDto;
@@ -51,7 +53,10 @@ import java.util.HashMap;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import org.springframework.core.env.Environment;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -84,6 +89,7 @@ public class EssaiService {
         Essai essai = modelMapper.map(essaiDto, Essai.class);
         return essai;
     }
+
     public String hashString(String stringToHash) throws NoSuchAlgorithmException, InvalidKeySpecException
     {
         //__generer hash du nom du fichier
@@ -280,23 +286,33 @@ public Object postFile() throws IOException{
 	return http;
 }
     // public PositionDto genererStucturePosition(@Valid EssaiDto essaiDto) {
+public Long countEssais() {
+    return repository.countEssais();
+}
         
-    //     GeometryFactory geometryFactory = new GeometryFactory();
-    //     Coordinate coordinate = new Coordinate(essaiDto.getPosition().getLatitude(), essaiDto.getPosition().getLongitude());
-    //     Point point = geometryFactory.createPoint(coordinate);
-    //     point.setSRID(3857);//Nous devons choisir un SRID (old 4326) WGS84
-    //     PositionDto position = essaiDto.getPosition();
-    //     position.setGeom(point);
-    //     position.setLatitude(essaiDto.getPosition().getLatitude());
-    //     position.setLongitude(essaiDto.getPosition().getLongitude());
-    //     position.setAltitude(essaiDto.getPosition().getAltitude());
-    //     position.setDepartement(essaiDto.getPosition().getDepartement());
-    //     position.setCommune(essaiDto.getPosition().getCommune());
-    //     position.setSectionCommunale(essaiDto.getPosition().getSectionCommunale());
-    //     return position;
-        
-    // }
+//__ pagination
+  public EssaiDetailsDtoResponse fetchWithPagination(int pageSize, int pageNumber){
+      EssaiDetailsDtoResponse essaiDetailsDtoResponse = new EssaiDetailsDtoResponse();
+      Pageable pageRequest =PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC,"created_date_essai"));
+        Page<EssaiDetails> results = essaiDetailsRepository.fetchWithPagination( pageRequest);
+        if(results.getContent() == null){
+            essaiDetailsDtoResponse.setMessage("Aucun résultat trouvé");
+            essaiDetailsDtoResponse.setPageNumber(0);
+            essaiDetailsDtoResponse.setPageSize(0);
+        }else{
+            essaiDetailsDtoResponse.setMessage("sucess");
+            essaiDetailsDtoResponse.setPageNumber(pageNumber);
+            essaiDetailsDtoResponse.setPageSize(pageSize);
 
+            List<EssaiDetailsDto> listEssaiDetailsDto;
+            Type listType = new TypeToken<List<EssaiDetailsDto>>() {}.getType();
+            listEssaiDetailsDto = modelMapper.map(results.getContent(), listType);
+
+            essaiDetailsDtoResponse.setEssaiDetailsDto(listEssaiDetailsDto);
+        }
+        
+        return essaiDetailsDtoResponse;
    
+  }
 
 }

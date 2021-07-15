@@ -77,4 +77,9 @@ public class UtilisateurController {
         return ResponseEntity.ok().body(service.rechercheParUsername(username));
     }
 
+    @GetMapping(path = "/count")
+    public  ResponseEntity<Long>  rechercheParmotsCles() throws ParseException {
+        return ResponseEntity.ok().body(service.countUtilisateurs());
+    }
+
 }
